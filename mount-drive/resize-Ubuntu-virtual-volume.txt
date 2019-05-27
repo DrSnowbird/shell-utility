@@ -1,0 +1,6 @@
+For ext4, I believe the command would be 
+
+resize2fs /dev/ubuntu-vg/root
+
+A reboot may be necessary afterwards.
+**edit: You may need to boot from a live CD because the root partition may need to be unmounted for this to work.
