@@ -15,15 +15,16 @@ Add the following code to the end of ~/.bashrc
 #########################################################################
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source /usr/local/bin/virtualenvwrapper.sh
-#source /home/user1/.local/bin/virtualenvwrapper.sh
-#export WORKON_HOME=~/Envs
-export WORKON_HOME=/mnt/seagate-3tb/Envs
+export WORKON_HOME=~/Envs
 if [ ! -d $WORKON_HOME ]; then
     mkdir -p $WORKON_HOME
 fi
+```
 
-# To activate your default venv environment, say, "venv-Weatherbot-Tutorial":
-workon venv-Weatherbot-Tutorial
+# To create & activate your default venv environment, say, "venv-Weatherbot-Tutorial":
+```
+mkvirtualenv my-venv
+workon my-venv
 ```
 
 # Create virtualenvwrapper 

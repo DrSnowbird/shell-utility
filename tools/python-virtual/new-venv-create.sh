@@ -1,5 +1,20 @@
 #!/bin/bash 
 
+echo "#######################################"
+echo "#### Preferred to use virtualenvwrapper"
+echo "#### --> See README.md"
+echo "#######################################"
+
+echo "Continue?"
+read -p "Are you sure to continue (NOT Recommended!) ? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    # do dangerous stuff
+else
+    exit 0
+fi
+
 # virtualenv vs venv
 #   https://stackoverflow.com/questions/41573587/what-is-the-difference-between-venv-pyvenv-pyenv-virtualenv-virtualenvwrappe
 # Install latest Python 3.7: 
