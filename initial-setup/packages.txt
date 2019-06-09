@@ -8,6 +8,8 @@ vim
 curl
 libssl-dev
 virtualenv
+# Gnome utility for setting preference
+dconfi-tools
 exfat-fuse
 exfat-utils
 python3-pip
