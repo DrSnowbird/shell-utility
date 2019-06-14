@@ -113,9 +113,10 @@ findNextPort
 
 if [ "${remote_host}" == "" ]; then
     # Manage local Linux host
-    # It's necessary to "bind" to docker.sock now:
+    # It's necessary to "bind" to docker.sock now
     # (not work) sudo docker run -d --name ${instanceName} -p ${port_use}:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-    sudo docker run -dit --restart unless-stopped --privileged --name ${instanceName} -p ${port_use}:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/user1/portainer:/data portainer/portainer
+    # docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /path/on/host/data:/data portainer/portainer
+    sudo docker run -dit --restart always --privileged --name ${instanceName} -p ${port_use}:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/user1/portainer:/data portainer/portainer
 else
     if [ "$remote_windows" == "" ]; then
         # Manage remote Linux host
