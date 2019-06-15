@@ -10,6 +10,11 @@ libssl-dev
 virtualenv
 # Gnome utility for setting preference
 dconfi-tools
+# File Manager with Tree view of directory
+#thunar
+#dolphon
+#caja
+pcmanfm
 # Tools
 net-tools
 exfat-fuse
