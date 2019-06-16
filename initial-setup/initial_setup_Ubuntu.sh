@@ -84,6 +84,12 @@ function setup_aliases() {
 #!/bin/bash -x
 . ~/bin/git-alias.sh
 . ~/bin/docker-alias.sh
+
+. ~/bin/my-alias.sh
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=\${JAVA_HOME}:\${PATH}
+
 EOF
     fi
 
@@ -129,28 +135,30 @@ if [ ! -s ~/.ssh/id_rsa ]; then
     ssh_setup
 fi
 
+#### ---- OpenJDK setup ---- ####
 function java8_install() {
     if [ -d ${ROOT_DIR}/shell-utility/tools/java-install ]; then
         cd ${ROOT_DIR}/shell-utility/tools/java-install
         ./install-java-Ubuntu.sh
-        ./install-java-Ubuntu-ppa.sh
+        ./install-java-Ubuntu-OpenJDK.sh
     fi
 }
 if [ "`which java`" = "" ]; then
     java8_install
 fi
 
+#### ---- Docker setup ---- ####
 function docker_install() {
     if [ -d ${ROOT_DIR}/shell-utility/docker/installation ]; then
         cd ${ROOT_DIR}/shell-utility/docker/installation
         ./docker-ce-install-Ubuntu.sh
     fi
 }
-
 if [ "`which docker`" = "" ]; then
     docker_install
 fi
 
+#### ---- Python3' pip3 setup ---- ####
 function pip3_setup() {
     sudo pip3 --no-cache-dir install --upgrade pip 
     #sudo pip3 --no-cache-dir install --ignore-installed -U -r ./requirements.txt
@@ -158,3 +166,12 @@ function pip3_setup() {
 }
 #pip3_setup
 
+#### ---- Desktop setup ---- ####
+function setupDesktop() {
+    # ref: https://askubuntu.com/questions/89417/how-to-span-single-wallpaper-over-dual-monitors
+    # ref: https://ubuntuforums.org/showthread.php?t=2331219
+    # -- To span desktop background images across two monitors
+    gsettings set org.gnome.desktop.background picture-options spanned
+    #gsettings set org.gnome.nautilus.preferences always-use-location-entry true
+}
+setupDesktop

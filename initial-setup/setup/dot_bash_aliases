@@ -1,0 +1,9 @@
+#!/bin/bash -x
+
+. ~/bin/git-alias.sh
+. ~/bin/docker-alias.sh
+. ~/bin/my-alias.sh
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=${JAVA_HOME}:${PATH}
+
