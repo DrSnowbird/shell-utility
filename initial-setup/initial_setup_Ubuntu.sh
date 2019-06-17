@@ -22,8 +22,10 @@ disable_sudo_password
 
 #### ---- Install common packages ---- ####
 function install_common_packages() {
-    for p in `cat ./packages.txt|grep -v "#"`; do
-        sudo apt-get install -y $p
+    for p in `cat ./packages.txt | grep -v "#" `; do
+        if [ "$p" != "" ]; then
+            sudo apt-get install -y $p
+        }
     done
 }
 install_common_packages
@@ -173,5 +175,9 @@ function setupDesktop() {
     # -- To span desktop background images across two monitors
     gsettings set org.gnome.desktop.background picture-options spanned
     #gsettings set org.gnome.nautilus.preferences always-use-location-entry true
+    
+    ## How to "Tweak" two monitor for multiple Workspace
+    # You can install "gnome-tweak-tool" via "sudo apt install gnome-tweak-tool".
+    # Then go to Workspaces > Display Handling > And choose Workspaces span displays
 }
 setupDesktop
