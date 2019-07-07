@@ -8,7 +8,7 @@ wget -q -c https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${V
 
 #### ---- Install debian package ----
 # sudo dpkg -i ./vagrant_${VAGRANT_VERSION}_x86_64.deb
-sudo apt install -y ./vagrant_${VAGRANT_VERSION}_x86_64.deb
+sudo apt install -f ./vagrant_${VAGRANT_VERSION}_x86_64.deb
 
 #### ---- Clean up debian package ----
 rm -f vagrant_${VAGRANT_VERSION}_x86_64.deb
