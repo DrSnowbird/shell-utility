@@ -1,16 +1,36 @@
 #!/bin/bash -x
 
+#### ---- Reference ----
+# https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+#### ---- remove old version ----
+for old in `dpkg -l | grep -i docker | awk '{print $2}' `; do
+    sudo apt-get remove -y $old
+done
+
+dpkg -l
+sudo apt-get remove -y docker docker-ce docker-engine docker.io containerd runc
+
+#### ---- install new version ----
 sudo apt-get update -y
 
 sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-commo
 
+#### ---- Add Docker’s official GPG key ----
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
 
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 #### ---- Install Docker Community Edition ---- ####
 sudo apt-get update -y
-sudo apt-get install -y docker-ce
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 #Add your user to the docker group to setup permissions. Make sure to restart your machine after executing this command.
 sudo usermod -a -G docker ${USER}
@@ -31,7 +51,7 @@ docker rmi -f hello-world
 # Execute the following command in a terminal window to install it.
 
 DOCKER_COMPOSE_RELEASE=`curl -s https://github.com/docker/compose/releases/latest|cut -d'"' -f2`
-DOCKER_COMPOSE_RELEASE=$(basename $DOCKER_RELEASE)
+DOCKER_COMPOSE_RELEASE=$(basename $DOCKER_COMPOSE_RELEASE)
 
 #### ---- Install Docker-compose ---- ####
 sudo apt remove -y docker-compose
