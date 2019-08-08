@@ -7,11 +7,17 @@ sudo apt-get install python3-pip
 sudo pip3 install virtualenvwrapper
 pip3 -V
 ```
-# Setup virtualenvwrapper in $HOME/.bashrc profile
+#################################
+# Way-1 (Most preferred approach)
+#################################
+# STEP-1) Setup virtualenvwrapper in $HOME/.bashrc profile
 Add the following code to the end of ~/.bashrc
+Or, run the script, tools/python-virtual/setup_venv_bash_profile.sh, 
+to auto-setup the environment
 ```
 #########################################################################
 #### ---- Customization for multiple virtual python environment ---- ####
+####      (most recommended approach and simple to switch venv)      ####
 #########################################################################
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source /usr/local/bin/virtualenvwrapper.sh
@@ -21,13 +27,14 @@ if [ ! -d $WORKON_HOME ]; then
 fi
 ```
 
-# To create & activate your default venv environment, say, "my-venv":
+# STEP-2) To create & activate your default venv environment, say, "my-venv":
 ```
 mkvirtualenv my-venv
 workon my-venv
 ```
-
-# Create virtualenvwrapper 
+#################################
+# Way-2 (less preferred approach)
+#################################
 This assumes you already install venv, virtualenv, virtualenvwrapper
 ```
 PYTHON_VERSION=36
