@@ -21,7 +21,7 @@ if [ ! -d $WORKON_HOME ]; then
 fi
 ```
 
-# To create & activate your default venv environment, say, "venv-Weatherbot-Tutorial":
+# To create & activate your default venv environment, say, "my-venv":
 ```
 mkvirtualenv my-venv
 workon my-venv

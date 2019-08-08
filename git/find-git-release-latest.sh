@@ -6,10 +6,10 @@ GIT_REPO_PATH=${1}
 
 if [ $# -lt 1 ]; then
     echo "*** ERROR: --- Usage ----"
-    echo "    $(base name $0) <GIT-REPO-PATH>"
+    echo "    $(basename $0) <GIT-REPO-PATH>"
     echo "e.g."
-    echo "    $(base name $0) minishift/minishift "
-    echo "    $(base name $0) DrSnowbird/eclipse-photon-docker "
+    echo "    $(basename $0) minishift/minishift "
+    echo "    $(basename $0) DrSnowbird/eclipse-photon-docker "
 
     exit 1
 fi
