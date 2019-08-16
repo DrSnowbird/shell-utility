@@ -1,3 +1,13 @@
+
+# Two scripts to setup and run Virtualenvwrapper
+* create-venv.sh: Create a new virtualenv environment, then you just "workon <new_venv>"
+```
+./create-venv.sh new_venv
+workon new_venv
+```
+* setup_venv_bash_profile.sh
+Setup bash profile, ~/.bashrc, to have proper variables for virtualenvwrapper to run.
+
 # Install Virtualenvwrapper
 ```
 # 1.) 1st step is to install pip for Python3
@@ -14,6 +24,7 @@ pip3 -V
 Add the following code to the end of ~/.bashrc
 Or, run the script, tools/python-virtual/setup_venv_bash_profile.sh, 
 to auto-setup the environment
+
 ```
 #########################################################################
 #### ---- Customization for multiple virtual python environment ---- ####
@@ -26,9 +37,7 @@ if [ ! -d $WORKON_HOME ]; then
     mkdir -p $WORKON_HOME
 fi
 ```
-
 # STEP-2) To create & activate your default venv environment, say, "my-venv":
-```
 mkvirtualenv my-venv
 workon my-venv
 ```

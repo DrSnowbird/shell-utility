@@ -1,4 +1,14 @@
-#!/bin/bash -x
+#!/bin/bash 
+  
+if [ $# -lt 1 ]; then
+    echo "Need project directory name for creating venv... Abort now!"
+    echo "---- Usage-1: "
+    echo "    source $(basename $0) <PROJECT_HOME_name> "
+    echo "---- Usage-2: (assuming you install virtualenvwrapper and virutalenv)"
+    echo "    mkvirtualenv ${PROJECT_HOME}"
+    echo "    workon ${PROJECT_HOME}"
+    exit 1
+fi
 
 PROJECT_HOME=${1:-my_venv}
 
@@ -43,11 +53,6 @@ if [ "${VIRTUALENVWRAPPER_SHELL}" = "" ]; then
     exit 1
 fi
 
-
-#### ---- Setup User's HOME profile to run virutalenvwrapper shell script ---
-
-cat <EOF >>- ~/.bashrc
-
 #########################################################################
 #### ---- Customization for multiple virtual python environment ---- ####
 ####      (most recommended approach and simple to switch venv)      ####
@@ -65,4 +70,9 @@ if [ ! -d $WORKON_HOME ]; then
     mkdir -p $WORKON_HOME
 fi
 
-EOF
+# To create & activate your default venv environment, say, "${PROJECT_HOME}"
+echo "------"
+unset PYTHONPATH
+mkvirtualenv ${PROJECT_HOME}
+workon ${PROJECT_HOME}
+
