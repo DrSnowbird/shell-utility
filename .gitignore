@@ -108,3 +108,6 @@ venv.bak/
 *.key
 
 *.deb
+
+*nohup.out
+*.swp
