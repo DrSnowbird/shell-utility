@@ -5,8 +5,8 @@
 ########################################################################################
 
 #### ---- Registry User login and password: ---- ####
-REGISTRY_USER=${REGISTRY_USER:-docker_user}
-REGISTRY_PSWD=${REGISTRY_PSWD:-dockdr_user}
+REGISTRY_USER=${REGISTRY_USER:-user1}
+REGISTRY_PSWD=${REGISTRY_PSWD:-user1}
 
 ## ref: https://ahmermansoor.blogspot.com/2019/03/configure-private-docker-registry-centos-7.html
 
@@ -15,27 +15,26 @@ DOCKER_HOST_IP=`hostname -I | awk '{print $1}'`
 
 #### ----  1.) Generate SSL certificate for Registry to use:
 DOCKER_REGISTRY_DIR=${DOCKER_REGISTRY_DIR:-/opt/docker/containers/docker-registry}
-DOCKER_REGISTRY_CERTS_DIR=${DOCKER_REGISTRY_DIR}/certs
 REGISTRY_KEY=docker-registry.key
 REGISTRY_CERT=docker-registry.crt
 
-SSL_COUNTRY=${SSL_COUNTRY:-US}
-SSL_STATE=${SSL_STATE:-MD}
-SSL_LOCALITY=${SSL_LOCALITY:-Aberdeen}
+SSL_COUNTRY=${SSL_COUNTRY:-Country}
+SSL_STATE=${SSL_STATE:-State}
+SSL_LOCALITY=${SSL_LOCALITY:-City}
 SSL_ORG=${SSL_ORG:-Org}
 SSL_CN=${SSL_CN:-${DOCKER_HOST_FQDN}}
 
-ls -al $(dirname ${DOCKER_REGISTRY_CERTS_DIR})
-sudo mkdir -p ${DOCKER_REGISTRY_CERTS_DIR}
+ls -al $(dirname ${DOCKER_REGISTRY_DIR}/certs)
+sudo mkdir -p ${DOCKER_REGISTRY_DIR}/certs
 sudo openssl req  \
    -newkey rsa:2048 \
    -nodes -sha256 \
    -x509 -days 3650 \
-   -keyout ${DOCKER_REGISTRY_CERTS_DIR}/${REGISTRY_KEY} \
-   -out ${DOCKER_REGISTRY_CERTS_DIR}/${REGISTRY_CERT} \
+   -keyout ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_KEY} \
+   -out ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} \
    -subj "/C=${SSL_COUNTRY}/ST=${SSL_STATE}/L=${SSL_LOCALITY}/O=${SSL_ORG}/CN=${SSL_CN}"
 
-ls -al ${DOCKER_REGISTRY_CERTS_DIR}
+ls -al ${DOCKER_REGISTRY_DIR}/certs
 
 #### ----  2.) Configure Basic HTTP Authentication for Private Docker Registry:
 #We create a directory and then create a passwd file therein. we will mount this directory on registry container to implement basic HTTP authentication for our Private Docker Registry.
@@ -70,6 +69,7 @@ sudo docker pull registry
 #### -------------------------------------------------------------------------------
 #### --- This will provide both BASIC and SSL x509 authentication for pull/push ----
 #### -------------------------------------------------------------------------------
+sudo docker rm -f docker-registry
 sudo docker run -d \
     --name docker-registry \
     --restart=always \
@@ -84,11 +84,19 @@ sudo docker run -d \
     -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
     registry:2
 
-sudo mkdir -p /etc/docker/certs.d
-sudo cp ${DOCKER_REGISTRY_CERTS_DIR}/${REGISTRY_CERT} /etc/docker/certs.d/
+
+echo "================> Debug ========================>"
+echo "DOCKER_REGISTRY_CERTS_DIR=${DOCKER_REGISTRY_DIR}/certs"
+echo "REGISTRY_CERT=${REGISTRY_CERT}"
+
+#### ---- 5.) Docker Registry SSL setup: ----
+# Install digital security certificate on Docker host as follow:
+sudo mkdir -p /etc/docker/certs.d/${DOCKER_HOST_FQDN}:5000
+sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /etc/docker/certs.d/${DOCKER_HOST_FQDN}:5000/ca.crt
 sudo service docker restart
 
-#### ---- Setup Client (localhost) to have the cert of the (local) SSL-enabled Registgry ---- ####
+
+#### 6.) ---- Setup Client (localhost) to have the cert of the (local) SSL-enabled Registgry ---- ####
 #### (remember to do the same to remote Node's Dockder daemon) 
 ####
 # Ok our server side now uses our certs. Great! but we are not done yet.
@@ -103,23 +111,24 @@ sudo service docker restart
 # then run the following command
 #   sudo update-ca-trust
 OS_TYPE=`cat /etc/os-release |grep '^NAME='|cut -d'"' -f2`
-if [[ "$OS_TYPE" =~ "^CentOS" ]]; then
+if [[ "$OS_TYPE" =~ ^CentOS* ]]; then
     # CentOS
     echo "---- OS Type: $OS_TYPE"
     # copy your certificates inside
-    sudo cp ${DOCKER_REGISTRY_CERTS_DIR}/${REGISTRY_CERT} /etc/pki/ca-trust/source/anchors/
+    sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /etc/pki/ca-trust/source/anchors/
     # then run the following command
     sudo update-ca-trust
 else
-    if [[ "$OS_TYPE" =~ "^Ubuntu" ]]; then
+    if [[ $OS_TYPE =~ ^Ubuntu ]]; then
         # Ubuntu
         echo "---- OS Type: $OS_TYPE"
         ## ---- For Ubuntu OS: -----
         # Copy it to /usr/local/share/ca-certificates/
-        sudo cp ${DOCKER_REGISTRY_CERTS_DIR}/${REGISTRY_CERT} /usr/local/share/ca-certificates/
+        sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /usr/local/share/ca-certificates/
         sudo update-ca-certificates
     else
         echo "**** Unsupported OS Type: $OS_TYPE"
+        exit 1
     fi
 fi
 
@@ -135,11 +144,6 @@ EOF
 }
 # setupEntryToEtcHosts
 
-#### ---- 6.) Setup SSL foldder for certs for registry ----
-# Install digital security certificate on Docker host as follow:
-sudo mkdir -p /etc/docker/certs.d/${DOCKER_HOST_FQDN}:5000
-sudo cp ${DOCKER_REGISTRY_CERTS_DIR}/certs/${REGISTRY_CERT} /etc/docker/certs.d/${DOCKER_HOST_FQDN}/ca.crt
-
 
 ##### ---- Also, need to open firewall in the host of the SSL-based Docker Registry ----
 #sudo firewall-cmd --permanent --add-port=80/tcp
@@ -149,19 +153,25 @@ sudo cp ${DOCKER_REGISTRY_CERTS_DIR}/certs/${REGISTRY_CERT} /etc/docker/certs.d/
 
 ############# -------- Testing using busybox ------- ###############
 
-#### ---- 7.) Pull an image from Docker Hub. We will later push this image to our Private Docker Registry.
+function test_push_pull_Registry_SSL() {
+    TEST_CONTAINER=${1:-busybox}
+    #### ---- Pull an image from Docker Hub. We will later push this image to our Private Docker Registry.
+    sudo docker pull ${TEST_CONTAINER}
 
-sudo docker pull busybox
+    # Create another tag for ${TEST_CONTAINER} image, so we can push it into our Private Docker Registry.
 
-# Create another tag for busybox image, so we can push it into our Private Docker Registry.
+    sudo docker tag ${TEST_CONTAINER}:latest ${DOCKER_HOST_FQDN}:5000/${TEST_CONTAINER}
 
-sudo docker tag busybox:latest ${DOCKER_HOST_FQDN}:5000/busybox
+    # Login to docker-registry.example.com using docker command.
+    #sudo docker login ${DOCKER_HOST_FQDN}:5000
+    #sudo chown -R $USER:$USER ~/.docker
 
-# Login to docker-registry.example.com using docker command.
-sudo docker login ${DOCKER_HOST_FQDN}:5000
+    # Push ${TEST_CONTAINER} image to Private Docker Registry.
+    sudo docker push ${DOCKER_HOST_FQDN}:5000/${TEST_CONTAINER}
+    sudo docker pull ${DOCKER_HOST_FQDN}:5000/${TEST_CONTAINER}
 
-# Push busybox image to Private Docker Registry.
-sudo docker push ${DOCKER_HOST_FQDN}:5000/busybox
+    # List locally available images of ${TEST_CONTAINER}
+    sudo docker images | grep ${TEST_CONTAINER}
+}
 
-# List locally available images of busybox
-sudo docker images | grep busybox
+test_push_pull_Registry_SSL alpine
