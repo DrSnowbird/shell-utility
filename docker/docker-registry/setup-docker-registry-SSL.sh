@@ -15,8 +15,10 @@ DOCKER_HOST_IP=`hostname -I | awk '{print $1}'`
 
 #### ----  1.) Generate SSL certificate for Registry to use:
 DOCKER_REGISTRY_DIR=${DOCKER_REGISTRY_DIR:-/opt/docker/containers/docker-registry}
-REGISTRY_KEY=docker-registry.key
 REGISTRY_CERT=docker-registry.crt
+REGISTRY_KEY=docker-registry.key
+#REGISTRY_KEY=docker-registry-${DOCKER_HOST_FQDN//\./-}.key
+#REGISTRY_CERT=docker-registry-${DOCKER_HOST_FQDN//\./-}.crt
 
 SSL_COUNTRY=${SSL_COUNTRY:-Country}
 SSL_STATE=${SSL_STATE:-State}
@@ -79,11 +81,11 @@ sudo docker run -d \
     -v ${DOCKER_REGISTRY_DIR}/certs:/certs \
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/${REGISTRY_CERT} \
     -e REGISTRY_HTTP_TLS_KEY=/certs/${REGISTRY_KEY} \
-    -e REGISTRY_AUTH=htpasswd \
-    -e REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm \
-    -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
     registry:2
 
+#    -e REGISTRY_AUTH=htpasswd \
+#    -e REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm \
+#    -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
 
 echo "================> Debug ========================>"
 echo "DOCKER_REGISTRY_CERTS_DIR=${DOCKER_REGISTRY_DIR}/certs"
@@ -115,7 +117,7 @@ if [[ "$OS_TYPE" =~ ^CentOS* ]]; then
     # CentOS
     echo "---- OS Type: $OS_TYPE"
     # copy your certificates inside
-    sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /etc/pki/ca-trust/source/anchors/
+    sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /etc/pki/ca-trust/source/anchors/docker-registry-${DOCKER_HOST_FQDN//\./-}.crt
     # then run the following command
     sudo update-ca-trust
 else
@@ -124,7 +126,7 @@ else
         echo "---- OS Type: $OS_TYPE"
         ## ---- For Ubuntu OS: -----
         # Copy it to /usr/local/share/ca-certificates/
-        sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /usr/local/share/ca-certificates/
+        sudo cp ${DOCKER_REGISTRY_DIR}/certs/${REGISTRY_CERT} /usr/local/share/ca-certificates/docker-registry-${DOCKER_HOST_FQDN//\./-}.crt
         sudo update-ca-certificates
     else
         echo "**** Unsupported OS Type: $OS_TYPE"
@@ -173,5 +175,4 @@ function test_push_pull_Registry_SSL() {
     # List locally available images of ${TEST_CONTAINER}
     sudo docker images | grep ${TEST_CONTAINER}
 }
-
-test_push_pull_Registry_SSL alpine
+test_push_pull_Registry_SSL busybox
