@@ -475,3 +475,5 @@ do_install() {
 # half the file during "curl | sh"
 do_install
 
+sudo usermod -aG docker $USER
+
