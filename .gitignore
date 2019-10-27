@@ -111,3 +111,4 @@ venv.bak/
 
 *nohup.out
 *.swp
+tmp.txt
