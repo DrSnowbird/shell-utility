@@ -50,11 +50,16 @@ docker rmi -f hello-world
 
 # Execute the following command in a terminal window to install it.
 
-DOCKER_COMPOSE_RELEASE=`curl -s https://github.com/docker/compose/releases/latest|cut -d'"' -f2`
-DOCKER_COMPOSE_RELEASE=$(basename $DOCKER_COMPOSE_RELEASE)
+DOCKER_COMPOSE_RELEASE=`curl -s https://github.com/docker/compose/releases/latest | cut -d'"' -f2 | cut -d'/' -f8-`
+sudo apt-get install -y jq
+DOCKER_COMPOSE_RELEASE=`curl -s https://api.github.com/repos/docker/compose/releases/latest | jq .name -r`
+#DOCKER_COMPOSE_RELEASE=$(basename $DOCKER_COMPOSE_RELEASE)
 
 #### ---- Install Docker-compose ---- ####
 sudo apt remove -y docker-compose
 sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_RELEASE}/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
 sudo chmod +x /usr/bin/docker-compose
+
+# 4.) Add user to docker group
+sudo usermod -aG docker $USER
 

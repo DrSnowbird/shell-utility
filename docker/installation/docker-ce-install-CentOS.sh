@@ -42,3 +42,5 @@ sudo systemctl enable docker
 sudo docker ps -a
 sudo docker --version
 
+# 4.) Add user to docker group
+sudo usermod -aG docker $USER
