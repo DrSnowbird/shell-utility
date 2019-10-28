@@ -189,8 +189,8 @@ ls -al ${DOCKER_CONFIG}
 cat $DOCKER_CONFIG
 
 sudo systemctl daemon-reload
-sleep 4
+sleep 5
 sudo systemctl start docker
-sleep 4
+sleep 10
 sudo systemctl status docker
 
