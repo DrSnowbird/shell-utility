@@ -171,7 +171,14 @@ EOF
 DOCKER_CONFIG=/etc/systemd/system/docker.service.d/docker.conf
 if [ -s ${DOCKER_CONFIG} ]; then
     sudo cp --backup=numbered ${DOCKER_CONFIG} ${DOCKER_CONFIG}.saved
+else
+    if [ ! -d $(dirname ${DOCKER_CONFIG}) ]; then
+        sudo mkdir -p $(dirname ${DOCKER_CONFIG})
+    else
+        ls -al $(dirname ${DOCKER_CONFIG})
+    fi
 fi
+
 cat <<EOF | sudo tee $DOCKER_CONFIG
 [Service]
 ExecStart=
