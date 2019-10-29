@@ -62,12 +62,6 @@ sudo docker pull registry
 
 #Create a container for Private Docker Registry.
 
-#sudo docker run -d \
-# (recast) [rsheu@recast-dev-2 docker-registry]$ ./test-registry-ssl.sh 
-# DOCKER_REGISTRY_DIR=/opt/docker/containers/docker-registry
-# DOCKER_REGISTRY_CERTS_DIR=/opt/docker/containers/docker-registry/certs
-# sudo docker run -it -p 5000:5000 --name registry -v /opt/docker/containers/docker-registry/certs:/certs -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key -v /opt/docker/containers/docker-registry/registry:/var/lib/registry registry:2
-
 #### -------------------------------------------------------------------------------
 #### --- This will provide both BASIC and SSL x509 authentication for pull/push ----
 #### -------------------------------------------------------------------------------

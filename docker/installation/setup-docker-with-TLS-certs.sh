@@ -115,8 +115,8 @@ echo "----------------------------------------------------------------------"
 #### ---- generate files:
 # - CA key
 # - CA certificate
-# -r-------- 1 rsheu rsheu 3326 Oct 27 17:34 ca-key.pem
-# -r--r--r-- 1 rsheu rsheu 2086 Oct 27 17:34 ca.pem
+# -r-------- 1 user-1 user-1 3326 Oct 27 17:34 ca-key.pem
+# -r--r--r-- 1 user-1 user-1 2086 Oct 27 17:34 ca.pem
 
 #~/bin/create-certs-TLS.sh -m ca -pw ${CA_PASSWD} -t certs -e ${EXPIRATION_DAYS}
 create_CA
@@ -126,8 +126,8 @@ echo "----------------------------------------------------------------------"
 #### ---- generate files:
 # - Server certificate
 # - Server key
-# -r--r--r-- 1 rsheu rsheu 1891 Oct 27 17:35 server-cert.pem
-# -r-------- 1 rsheu rsheu 3243 Oct 27 17:35 server-key.pem
+# -r--r--r-- 1 user-1 user-1 1891 Oct 27 17:35 server-cert.pem
+# -r-------- 1 user-1 user-1 3243 Oct 27 17:35 server-key.pem
 
 #~/bin/create-certs-TLS.sh -m server -h ${HOST_NAME} -hip ${HOST_IP} -pw ${CA_PASSWD} -t certs -e ${EXPIRATION_DAYS}
 create_ServerCert
