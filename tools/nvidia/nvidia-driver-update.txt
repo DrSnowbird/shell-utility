@@ -1,0 +1,15 @@
+1. Open a Terminal shell
+2. You need to now become the root user. Type:
+su -
+When prompted, please enter your 'root' user's password.
+3. You need to disable the Linux desktop and switch to a text interface. Type:
+init 3
+4. You will be prompted for username to login as. Type:
+root
+5. Enter your 'root' user's password.
+6. Navigate to the folder with the downloaded driver. Type:
+cd /path/to/downloaded/driver/location
+7. Run the NVIDIA driver installer. Type:
+sh NVIDIA-Linux-x86_64-430.40.run --silent --no-network
+8. After the script completes, you should see the terminal prompt. Then, reboot the machine. Type:
+reboot
