@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/bin/bash -x
 
 GIT_REPO_PATH=${1}
-
+COMPRESSED_FILE_TYPE=${2:-"tar.gz"}
 #### Note: the version extracted will remove the prefix "v" from, e.g., v3.11.0 to be 3.11.0
 
 if [ $# -lt 1 ]; then
     echo "*** ERROR: --- Usage ----"
-    echo "    $(basename $0) <GIT-REPO-PATH>"
+    echo "    $(basename $0) <GIT-REPO-PATH> <COMPRESSED_FILE_TYPE: default tar.gz; can be, xz, tgz, etc.>"
     echo "e.g."
     echo "    $(basename $0) minishift/minishift "
     echo "    $(basename $0) DrSnowbird/eclipse-photon-docker "
@@ -22,12 +22,12 @@ USE_GIT_API=0
 #### ---- Using curl, grep, sed only ---- ####
 ##############################################
 function get_latest_release() {
-    TGZ_URL=`curl --silent https://github.com/${1}/releases |grep "tar.gz" |head -1|cut -d'"' -f2`
+    TGZ_URL=`curl --silent https://github.com/${1}/releases |grep "${COMPRESSED_FILE_TYPE}" |head -1|cut -d'"' -f2`
     # TGZ_URL=`curl https://github.com/openshift/origin/releases |grep "client-tools"|grep "tar.gz" |head -1|cut -d'"' -f2`
     # https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
 
     LATEST_VERSION=`echo $(basename ${TGZ_URL}) | sed -E 's/.*v([^-]+).*/\1/' `
-    LATEST_VERSION=${LATEST_VERSION%%.tar.gz}
+    LATEST_VERSION=${LATEST_VERSION%%.$COMPRESSED_FILE_TYPE}
 }
 get_latest_release ${GIT_REPO_PATH}
 
