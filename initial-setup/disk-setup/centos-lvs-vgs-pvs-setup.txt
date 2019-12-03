@@ -1,0 +1,24 @@
+vgscan
+lvdisplay
+pvdisplay
+vgdisplay
+## 1.) Extend (add) /dev/sda3 (from pvdisplay) into volume group "centos_pett"
+vgextend centos_pett /dev/sda3
+pvs
+vgs
+lvs
+lvdisplay
+vgdisplay
+## 2.) LogicVolume Extend: with available size (find from vgdisplay with "Free PE/Size")
+##   Use lvdisplay to find "LV Path": /dev/centos_pett/root
+##   Use vgdisplay to find "Free PE / Size": 32767
+lvextend -l +32767 /dev/centos_pett/root
+df /
+pvs
+vgs
+lvs
+# (not work: Don't use this command) resize2fs /dev/centos_pett/root
+# Instead use xfs_grwosfs
+## 3.) Grow XFS system with LV Path=/dev/centos_pett/root from lvdisplay
+xfs_growfs /dev/centos_pett/root
+
