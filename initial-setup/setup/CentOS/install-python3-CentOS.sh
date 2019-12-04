@@ -14,4 +14,4 @@ sudo yum install -y python36u python36u-libs python36u-devel python36u-pip
 python3.6 -V
 
 sudo pip3 install virtualenv
-sudo pip3 install virutalenvwrapper
+sudo pip3 install virtualenvwrapper
