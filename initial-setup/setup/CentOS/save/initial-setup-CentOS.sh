@@ -64,15 +64,19 @@ cat << EOF >> ~/.bashrc
     #### ---- Customization for multiple virtual python environment ---- ####
     #########################################################################
 
+    export WORKON_HOME=~/Envs
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    source /usr/local/bin/virtualenvwrapper.sh
-    #source /home/${USER}/.local/bin/virtualenvwrapper.sh
-    #export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
+    if [ -s /usr/local/bin/virtualenvwrapper.sh ]; then
+        source /usr/local/bin/virtualenvwrapper.sh
+    elif [ -s ~/.local/bin/virtualenvwrapper.sh ]; then
+        source ~/.local/bin/virtualenvwrapper.sh
+    fi
     if [ ! -d $WORKON_HOME ]; then
         mkdir -p $WORKON_HOME
     fi
 EOF
 }
+
 if [ "$WORKON_HOME" != "" ]; then
     setup_virtualenvwrapper_in_bashrc
 fi
