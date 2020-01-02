@@ -1,4 +1,6 @@
-
+# First -> Install Python3 (on CentOS 7/8)
+Two ways (at least) to setup Python3 on CentOS 7/8:
+* Usin RPM package
 # Two scripts to setup and run Virtualenvwrapper
 * create-venv.sh: Create a new virtualenv environment, then you just "workon <new_venv>"
 ```
