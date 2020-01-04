@@ -22,6 +22,12 @@ sudo alternatives --set python /usr/bin/python3
 python --version
 python3 --version
 
+sudo yum install -y epel-release
+
+pip3 --version
+pip3 install --user virtualenvwrapper
+pip install --upgrade pip
+pip3 install --user --upgrade pip
 sudo pip3 install virtualenv
 sudo pip3 install virtualenvwrapper
 
