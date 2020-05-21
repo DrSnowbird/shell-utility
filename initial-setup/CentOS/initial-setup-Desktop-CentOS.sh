@@ -23,8 +23,8 @@ disable_sudo_password
 function install_common_packages() {
     for p in `cat ./packages.txt | grep -v "#" `; do
         if [ "$p" != "" ]; then
-            sudo apt-get install -y $p
-        }
+            sudo yum install -y $p
+	fi
     done
 }
 install_common_packages
@@ -144,7 +144,6 @@ fi
 function java8_install() {
     if [ -d ${ROOT_DIR}/shell-utility/tools/java-install ]; then
         cd ${ROOT_DIR}/shell-utility/tools/java-install
-        ./install-java-Ubuntu.sh
         ./install-java-Ubuntu-OpenJDK.sh
     fi
 }
@@ -153,10 +152,11 @@ if [ "`which java`" = "" ]; then
 fi
 
 #### ---- Docker setup ---- ####
+
 function docker_install() {
     if [ -d ${ROOT_DIR}/shell-utility/docker/installation ]; then
         cd ${ROOT_DIR}/shell-utility/docker/installation
-        ./docker-ce-install-Ubuntu.sh
+        ./setup-docker-and-docker-compose-CentOS.sh
     fi
 }
 if [ "`which docker`" = "" ]; then
@@ -183,6 +183,6 @@ function setupDesktop() {
     # You can install "gnome-tweak-tool" via "sudo apt install gnome-tweak-tool".
     # Then go to Workspaces > Display Handling > And choose Workspaces span displays
 }
-setupDesktop
+#setupDesktop
 
 

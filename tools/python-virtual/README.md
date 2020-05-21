@@ -7,10 +7,10 @@ Two ways (at least) to setup Python3 on CentOS 7/8:
 ./create-venv.sh new_venv
 workon new_venv
 ```
-* setup_venv_bash_profile.sh
+* setup_venv_bash_profile.sh: to add default virutalenvwrapper setup whenever you login
 Setup bash profile, ~/.bashrc, to have proper variables for virtualenvwrapper to run.
 
-# Install Virtualenvwrapper
+# How to Install Virtualenvwrapper
 ```
 # 1.) 1st step is to install pip for Python3
 sudo apt-get install python3-pip

@@ -128,6 +128,6 @@ else
         sudo docker run -dit --restart unless-stopped -p ${port_use}:9000 -H tcp://${remote_host}:2375 portainer/portainer:windows 
     fi
 fi
-displayPortainerURL ${port_use}
+#displayPortainerURL ${port_use}
 
 
