@@ -85,43 +85,43 @@ INSTALL_SERVER=1
 
 PARAMS=""
 while (( "$#" )); do
-  _ARG_VALUE=""
-  _ALLOWD_VALUES=""
-  case "$1" in
-    -s|--server)
-      INSTALL_SERVER=1
-      shift
-      ;;
-    -d|--desktop)
-      INSTALL_SERVER=0
-      shift
-      ;;
-    -a|--action)
-      _ALLOWD_VALUES="install run"
-      _aux_arg_process "$@"
-      if [ "$_ARG_VALUE" != "" ]; then
-        ACTION=$_ARG_VALUE
-        shift 2
-      fi
-      ;;
-    -t|--install-type)
-      _ALLOWD_VALUES="generic package distribution"
-      _aux_arg_process "$@"
-      if [ "$_ARG_VALUE" != "" ]; then
-        INSTALL_TYPE=$_ARG_VALUE
-        shift 2
-      fi
-      ;;
-    -*|--*=) # unsupported flags
-      echo "Error: Unsupported flag $1" >&2
-      usage
-      exit 1
-      ;;
-    *) # preserve positional arguments
-      PARAMS="$PARAMS $1"
-      shift
-      ;;
-  esac
+    _ARG_VALUE=""
+    _ALLOWD_VALUES=""
+    case "$1" in
+        -s|--server)
+            INSTALL_SERVER=1
+            shift
+            ;;
+        -d|--desktop)
+            INSTALL_SERVER=0
+            shift
+            ;;
+        -a|--action)
+            _ALLOWD_VALUES="install run"
+            _aux_arg_process "$@"
+            if [ "$_ARG_VALUE" != "" ]; then
+                ACTION=$_ARG_VALUE
+                shift 2
+            fi
+            ;;
+        -t|--install-type)
+            _ALLOWD_VALUES="generic package distribution"
+            _aux_arg_process "$@"
+            if [ "$_ARG_VALUE" != "" ]; then
+                INSTALL_TYPE=$_ARG_VALUE
+                shift 2
+            fi
+            ;;
+        -*|--*=) # unsupported flags
+            echo "Error: Unsupported flag $1" >&2
+            usage
+            exit 1
+            ;;
+        *) # preserve positional arguments
+            PARAMS="$PARAMS $1"
+            shift
+            ;;
+    esac
 done
 # set positional arguments in their proper place
 eval set -- "$PARAMS"
