@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+# set -e
 
 # ref: https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 #
