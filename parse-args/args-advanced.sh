@@ -9,27 +9,34 @@
 # Use: Just modify the case's choices to meet you needs
 #
 # Test:
-#  ./args-simple.sh -a install -t generic install-code-server.sh
+#  ./args-advanced.sh -s -a install -t generic -d remiaing args: code-extensions.txt
 #
-# ---> args: -a install -t generic
+# ---> args: -a install -t generic -d remiaing args: code-extensions.txt
 # OK: value: install: 
 #  matched list: install run
-# ---> args: -t generic
+# ---> args: -t generic -d remiaing args: code-extensions.txt
+# OK: value: generic: 
+#  matched list: generic package distribution
+# ---- parsed args: ---
 # OK: value: generic: 
 #  matched list: generic package distribution
 # ACTION: -a : install
 # INSTALL_TYPE: -t : generic
-# remiaing args: install-code-server.sh
+# remiaing args: remiaing args: code-extensions.txt
+#
 ##########################################################################
 
 function usage() {
     echo "-- usage --"
     echo -e " $(basename $0)             \n \
-    [ -a|--action : {install, run}]      \n \
+    [ -s|--server : (default) Install Server or not \n \
+    [ -d|--desktop : Install desktop or not \n \
+        (either VS Code or Code-Server; -s and -d are mutual exclusive) ] \n \
+    [ -a|--action : {install, run}] : default=install     \n \
     [ -t|--install-type : {              \n \
         generic : (*.tar.gz),            \n \
         package : (*.deb, or *.rpm),     \n \
-        distribution : (auto-detect OS to install) } ]
+        distribution : (auto-detect OS to install) } : default=generic ]
     "
     _ALLOWD_VALUES="generic package distribution"
 }
@@ -71,11 +78,24 @@ function _aux_arg_process() {
     fi
 }
 
+#### ---- default values ----
+ACTION="install"
+INSTALL_TYPE="generic"
+INSTALL_SERVER=1
+
 PARAMS=""
 while (( "$#" )); do
   _ARG_VALUE=""
   _ALLOWD_VALUES=""
   case "$1" in
+    -s|--server)
+      INSTALL_SERVER=1
+      shift
+      ;;
+    -d|--desktop)
+      INSTALL_SERVER=0
+      shift
+      ;;
     -a|--action)
       _ALLOWD_VALUES="install run"
       _aux_arg_process "$@"
@@ -105,8 +125,8 @@ while (( "$#" )); do
 done
 # set positional arguments in their proper place
 eval set -- "$PARAMS"
-
+echo "---- parsed args: ---"
 echo "ACTION: -a : $ACTION"
 echo "INSTALL_TYPE: -t : $INSTALL_TYPE"
+echo "INSTALL_SERVER: -s : $INSTALL_SERVER"
 echo "remiaing args: $*"
-
