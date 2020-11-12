@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+-- ref: https://gist.github.com/stephenhardy/5470814
+
 echo "--- Usage: <GIT_REPO> [<GIT_USER>]"
 echo "e.g."
 echo "  for git@github.com:DrSnowbird/json-server-docker.git full GIT Repo:"
