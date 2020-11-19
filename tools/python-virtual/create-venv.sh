@@ -54,21 +54,27 @@ fi
 #### ---- Customization for multiple virtual python environment ---- ####
 ####      (most recommended approach and simple to switch venv)      ####
 #########################################################################
-#### Ref: https://virtualenvwrapper.readthedocs.io/en/latest/install.html
-#### Ref: https://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
-#### mkvirtualenv [-a project_path] [-i package] [-r requirements_file] [virtualenv options] ENVNAME
+function setup_virtualenvwrapper_in_bashrc() {
+cat << EOF >> ~/.bashrc
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+#########################################################################
 
-#### ---- root directory for venv setups ---- ####
-export WORKON_HOME=~/Envs
-echo "WORKON_HOME=${WORKON_HOME}"
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=`which python3`
+#source /usr/local/bin/virtualenvwrapper.sh
+source `which virtualenvwrapper.sh`
+#source /home/${USER}/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
 if [ ! -d $WORKON_HOME ]; then
     mkdir -p $WORKON_HOME
 fi
-
-export VIRTUALENVWRAPPER_PYTHON=${PYTHON_EXE}
-export VIRTUALENVWRAPPER_VIRTUALENV=${VIRTUALENV_EXE}
-
-source ${VIRTUALENVWRAPPER_SHELL}
+EOF
+}
+if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
+    #if [ "$WORKON_HOME" != "" ]; then
+    setup_virtualenvwrapper_in_bashrc
+fi
 
 # To create & activate your default venv environment, say, "${PROJECT_HOME}"
 echo "------"

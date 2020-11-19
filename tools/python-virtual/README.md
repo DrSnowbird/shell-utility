@@ -31,11 +31,26 @@ to auto-setup the environment
 #### ---- Customization for multiple virtual python environment ---- ####
 ####      (most recommended approach and simple to switch venv)      ####
 #########################################################################
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-source /usr/local/bin/virtualenvwrapper.sh
-export WORKON_HOME=~/Envs
+function setup_virtualenvwrapper_in_bashrc() {
+cat << EOF >> ~/.bashrc
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+#########################################################################
+
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=`which python3`
+#source /usr/local/bin/virtualenvwrapper.sh
+source `which virtualenvwrapper.sh`
+#source /home/${USER}/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
 if [ ! -d $WORKON_HOME ]; then
     mkdir -p $WORKON_HOME
+fi
+EOF
+}
+if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
+    #if [ "$WORKON_HOME" != "" ]; then
+    setup_virtualenvwrapper_in_bashrc
 fi
 ```
 # STEP-2) To create & activate your default venv environment, say, "my-venv":

@@ -1,7 +1,8 @@
 #!/bin/bash -x
 
+BASE_DISK_MOUNT=/mnt/seagate-3tb/
 
-ROOT_DIR=~/git-public
+ROOT_DIR=${BASE_DISK_MOUNT}/git-public
 
 #mkdir -p ${ROOT_DIR}
 
@@ -17,24 +18,27 @@ function disable_sudo_password() {
         echo "${USER}     ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
     fi
 }
-disable_sudo_password
+#disable_sudo_password
 
 #### ---- Install common packages ---- ####
 function install_common_packages() {
     for p in `cat ./packages.txt | grep -v "#" `; do
         if [ "$p" != "" ]; then
             sudo apt-get install -y $p
-        }
+        fi
     done
 }
-install_common_packages
+#install_common_packages
 
 #### ---- Install Google-Chrome ---- ####
 function install_google_chrome() {
     cd ~
+    sudo apt install -y gdebi-core wget
     wget -c -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     sudo dpkg -i google-chrome-stable_current_amd64.deb
+    #sudo gdebi google-chrome-stable_current_amd64.deb
     cat /etc/apt/sources.list.d/google-chrome.list
+    which google-chrome
 }
 if [ "`which google-chrome`" = "" ]; then
     install_google_chrome
@@ -43,11 +47,11 @@ fi
 #### ---- Install git ---- ####
 function install_git() {
     sudo apt install -y git meld
-    #USER_EMAIL=${USER}@openkbs.org
-    #USER_NAME=openkbs
-    #git config --global user.email "${USER_EMAIL}"
-    #git config --global user.name "${USER_NAME}"
-    if [ ! -d ${ROOT_DIR}/shell-utility ];
+    USER_EMAIL=${USER}@openkbs.org
+    USER_NAME=DrSnowbird
+    git config --global user.email "${USER_EMAIL}"
+    git config --global user.name "${USER_NAME}"
+    if [ ! -d ${ROOT_DIR}/shell-utility ]; then
         cd ${ROOT_DIR}
         git clone git@github.com:DrSnowbird/shell-utility.git
     fi
@@ -56,7 +60,10 @@ if [ "`which git`" = "" ]; then
     install_git
 fi
 
-#### ---- Setup Python Virtualenvwrapper in $HOME/.bashrc file  ---- ####
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+####      (most recommended approach and simple to switch venv)      ####
+#########################################################################
 function setup_virtualenvwrapper_in_bashrc() {
 cat << EOF >> ~/.bashrc
 #########################################################################
@@ -64,13 +71,13 @@ cat << EOF >> ~/.bashrc
 #########################################################################
 
 # export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_PYTHON=\`which python3\`
+export VIRTUALENVWRAPPER_PYTHON=`which python3`
 #source /usr/local/bin/virtualenvwrapper.sh
-source \`which virtualenvwrapper.sh\`
-#source /home/\${USER}/.local/bin/virtualenvwrapper.sh
-export WORKON_HOME=\${BASE_DISK_MOUNT}/Envs
-if [ ! -d \$WORKON_HOME ]; then
-    mkdir -p \$WORKON_HOME
+source `which virtualenvwrapper.sh`
+#source /home/${USER}/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
+if [ ! -d $WORKON_HOME ]; then
+    mkdir -p $WORKON_HOME
 fi
 EOF
 }
@@ -81,13 +88,15 @@ fi
 
 #### ---- Setup Aliases---- ####
 function setup_aliases() {
-    alias_setup_already="`cat ~/.bash_aliases | grep git-alias.sh`"
+    alias_setup_already="`cat ~/.bashrc | grep git-alias.sh`"
     if [ "$alias_setup_already" != "" ]; then
-        cat << EOF >> ~/.bash_aliases
-#!/bin/bash -x
+        cat << EOF >> ~/.bashrc
+        
+#### ---- Customized aliases ----
+####
+
 . ~/bin/git-alias.sh
 . ~/bin/docker-alias.sh
-
 . ~/bin/my-alias.sh
 
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
@@ -145,24 +154,24 @@ if [ ! -s ~/.ssh/id_rsa ]; then
 fi
 
 #### ---- OpenJDK setup ---- ####
-function java8_install() {
+function java_install() {
     if [ -d ${ROOT_DIR}/shell-utility/tools/java-install ]; then
         cd ${ROOT_DIR}/shell-utility/tools/java-install
-        ./install-openjdk8-Ubuntu18.sh
+        # ./install-openjdk8-Ubuntu18.sh
+        # latest JDK 11 as default from Ubuntu 20
+        ./install-java-Ubuntu-OpenJDK.sh
     fi
+    java -
 }
 if [ "`which java`" = "" ]; then
-    java8_install
-else
-    echo "**** Java already exists, skip install since Java version: " 
-    java -version
+    java_install
 fi
 
 #### ---- Docker setup ---- ####
 function docker_install() {
     if [ -d ${ROOT_DIR}/shell-utility/docker/installation ]; then
         cd ${ROOT_DIR}/shell-utility/docker/installation
-        ./docker-ce-install-CentOS.sh
+        ./docker-ce-install-Ubuntu.sh
     fi
 }
 if [ "`which docker`" = "" ]; then
@@ -170,19 +179,35 @@ if [ "`which docker`" = "" ]; then
 fi
 
 #### ---- Python3' pip3 setup ---- ####
-function python3_pip3_setup() {
-
-    if [ -d ${ROOT_DIR}/shell-utility/tools/python-virtual ]; then
-        cd ${ROOT_DIR}/shell-utility/tools/python-virtual
-        ./install-python3-centos7.sh
-    fi
-
+function pip3_install() {
+    sudo apt update -y
+    sudo apt install -y python3-pip
+    # The command above will also install all the dependencies required for building Python modules.
+    # When the installation is complete, verify the installation by checking the pip version:
+    pip3 --version
+    sudo pip3 --no-cache-dir install --upgrade pip
     if [ -s ./requirements.txt ]; then
-        ##sudo pip3 --no-cache-dir install --ignore-installed -U -r ./requirements.txt
-        #sudo `which pip3` --no-cache-dir install -U -r ./requirements.txt
+        #sudo pip3 --no-cache-dir install --ignore-installed -U -r ./requirements.txt
+        sudo `which pip3` --no-cache-dir install -U -r ./requirements.txt
     fi
+    pip3 --version
+    sudo pip3 install virtualenv
+    sudo pip3 install virtualenvwrapper
 }
-python3_pip3_setup
+if [ "`which pip3`" = "" ]; then
+    pip3_install
+fi
 
-
-
+#### ---- Desktop setup ---- ####
+function setupDesktop() {
+    # ref: https://askubuntu.com/questions/89417/how-to-span-single-wallpaper-over-dual-monitors
+    # ref: https://ubuntuforums.org/showthread.php?t=2331219
+    # -- To span desktop background images across two monitors
+    gsettings set org.gnome.desktop.background picture-options spanned
+    #gsettings set org.gnome.nautilus.preferences always-use-location-entry true
+    
+    ## How to "Tweak" two monitor for multiple Workspace
+    # You can install "gnome-tweak-tool" via "sudo apt install gnome-tweak-tool".
+    # Then go to Workspaces > Display Handling > And choose Workspaces span displays
+}
+setupDesktop

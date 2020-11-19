@@ -19,8 +19,13 @@ rm -rf .git
 
 -- recreate the repos from the current content only
 git init
+
 git add .
-git commit -m "Initial commit"
+
+# git commit -m "Initial commit"
+git commit -S -m "Initial commit" --allow-empty
+
+git remote rm origin
 
 -- push to the github remote repos ensuring you overwrite history
 #git remote add origin git@github.com:DrSnowbird/json-server-docker.git

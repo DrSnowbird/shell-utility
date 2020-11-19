@@ -5,11 +5,12 @@ make
 git
 meld
 wget
+#unzip
 vim
 curl
 #libssl-dev
 virtualenv
-### Gnome utility for setting preference
+# Gnome utility for setting preference
 #gnome-tweak-tool
 #dconfi-tools
 # File Manager with Tree view of directory
@@ -20,4 +21,12 @@ virtualenv
 # Tools
 net-tools
 #exfat-fuse
-
+#exfat-utils
+python3-pip
+python3-setuptools
+python3-dev
+python3-venv
+python3-numpy
+python3-scipy
+python3-pandas
+python3-matplotlib

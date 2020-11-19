@@ -18,7 +18,7 @@ function disable_sudo_password() {
         echo "${USER}     ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
     fi
 }
-disable_sudo_password
+#disable_sudo_password
 
 #### ---- Install common packages ---- ####
 function install_common_packages() {
@@ -57,24 +57,29 @@ if [ "`which git`" = "" ]; then
     install_git
 fi
 
-#### ---- Setup Python Virtualenvwrapper in $HOME/.bashrc file  ---- ####
-
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+####      (most recommended approach and simple to switch venv)      ####
+#########################################################################
 function setup_virtualenvwrapper_in_bashrc() {
 cat << EOF >> ~/.bashrc
-    #########################################################################
-    #### ---- Customization for multiple virtual python environment ---- ####
-    #########################################################################
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+#########################################################################
 
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    source /usr/local/bin/virtualenvwrapper.sh
-    #source /home/${USER}/.local/bin/virtualenvwrapper.sh
-    #export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
-    if [ ! -d $WORKON_HOME ]; then
-        mkdir -p $WORKON_HOME
-    fi
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=`which python3`
+#source /usr/local/bin/virtualenvwrapper.sh
+source `which virtualenvwrapper.sh`
+#source /home/${USER}/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
+if [ ! -d $WORKON_HOME ]; then
+    mkdir -p $WORKON_HOME
+fi
 EOF
 }
-if [ "$WORKON_HOME" != "" ]; then
+if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
+    #if [ "$WORKON_HOME" != "" ]; then
     setup_virtualenvwrapper_in_bashrc
 fi
 
@@ -93,17 +98,23 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=\${JAVA_HOME}:\${PATH}
 
 EOF
+    else
+	    echo "..... setup_aliases(): already being set up!"
     fi
 
     if [ ! -s ~/bin/git-alias.sh ]; then
-	    cd ${ROOT_DIR}/shell-utility/initial_setup
-	    mkdir -p ~/bin
-	    cp ./setup/git-alias.sh ~/bin
-	    cp ./setup/docker-alias.sh ~/bin
-	    chmod +x ~/bin/*.sh
-
-	    source ~/.bash_aliases 
-	fi
+        cd ${ROOT_DIR}/shell-utility/initial-setup/alias
+        mkdir -p ~/bin
+        cp git-alias.sh ~/bin
+        cp docker-alias.sh ~/bin
+        cd
+        chmod +x ~/bin/*.sh
+        source ~/.bashrc
+        env
+    else
+        echo "*** ERROR: can't find ~/bin/git-alias.sh! Abort!"
+    fi
+    alias
 }
 setup_aliases
 

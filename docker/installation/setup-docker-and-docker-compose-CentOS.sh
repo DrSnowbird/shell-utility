@@ -15,7 +15,7 @@ setup_git_shell_utility
 function setup_docker_and_compose() {
     #### ---- setup .bash.rc ---- ####
     mkdir ~/bin/
-    cp ${BASE_DIR}/initial-setup/setup/*.sh ~/bin
+    cp ${BASE_DIR}/initial-setup/alias/*.sh ~/bin
     ~/bin/setup_bash_rc_profile.sh
     
     #### ---- docker setup: ---- ####

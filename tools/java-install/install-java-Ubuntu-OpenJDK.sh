@@ -6,7 +6,8 @@
 
 
 sudo apt-get update -y
-sudo apt-get install -y --no-install-recommends openjdk-8-jdk
+sudo apt install -y default-jdk
+#sudo apt-get install -y --no-install-recommends openjdk-8-jdk
 sudo rm -rf /var/lib/apt/lists/*
 
 echo ">> JAVA_HOME= $(readlink -f $JAVA_HOME)"
@@ -22,11 +23,11 @@ sudo update-alternatives --query java | grep -q 'Status: manual'
 #
 #   https://github.com/docker-library/openjdk/issues
 
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/default-java
 export PATH=$JAVA_HOME/bin:$PATH
 
-echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bash_aliases
-echo "export PATH=${PATH}:\${JAVA_HOME}/bin" >> ~/.bash_aliases
+echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bashrc
+echo "export PATH=${PATH}:\${JAVA_HOME}/bin" >> ~/.bashrc
 
-source ~/.bash_aliases
+source ~/.bashrc
 java -version
