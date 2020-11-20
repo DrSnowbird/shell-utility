@@ -208,6 +208,7 @@ function setupDesktop() {
     
     ## How to "Tweak" two monitor for multiple Workspace
     # You can install "gnome-tweak-tool" via "sudo apt install gnome-tweak-tool".
+    sudo apt install -y gnome-tweaks 
     # Then go to Workspaces > Display Handling > And choose Workspaces span displays
 }
 setupDesktop
