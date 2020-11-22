@@ -2,12 +2,12 @@
 
 BASE_DISK_MOUNT=/mnt/seagate-3tb/
 
-ROOT_DIR=${BASE_DISK_MOUNT}/git-public
+GIT_DIR=${BASE_DISK_MOUNT}/git-public
 
-#mkdir -p ${ROOT_DIR}
+#mkdir -p ${GIT_DIR}
 
-if [ ! -d ${ROOT_DIR} ]; then
-    echo "${ROOT_DIR} not found! Cant' continue! Abort! "
+if [ ! -d ${GIT_DIR} ]; then
+    echo "${GIT_DIR} not found! Cant' continue! Abort! "
     exit 1
 fi
 
@@ -51,8 +51,8 @@ function install_git() {
     USER_NAME=DrSnowbird
     git config --global user.email "${USER_EMAIL}"
     git config --global user.name "${USER_NAME}"
-    if [ ! -d ${ROOT_DIR}/shell-utility ]; then
-        cd ${ROOT_DIR}
+    if [ ! -d ${GIT_DIR}/shell-utility ]; then
+        cd ${GIT_DIR}
         git clone git@github.com:DrSnowbird/shell-utility.git
     fi
 }
@@ -108,7 +108,7 @@ EOF
     fi
 
     if [ ! -s ~/bin/git-alias.sh ]; then
-        cd ${ROOT_DIR}/shell-utility/initial-setup/alias
+        cd ${GIT_DIR}/shell-utility/initial-setup/alias
         mkdir -p ~/bin
         cp git-alias.sh ~/bin
         cp docker-alias.sh ~/bin
@@ -125,7 +125,7 @@ setup_aliases
 
 #### ---- Install Docker ---- ####
 function install_docker() {
-    cd ${ROOT_DIR}/shell-utility/docker/installation
+    cd ${GIT_DIR}/shell-utility/docker/installation
     ./docker-ce-install-Ubuntu.sh
 }
 install_docker
@@ -155,8 +155,8 @@ fi
 
 #### ---- OpenJDK setup ---- ####
 function java_install() {
-    if [ -d ${ROOT_DIR}/shell-utility/tools/java-install ]; then
-        cd ${ROOT_DIR}/shell-utility/tools/java-install
+    if [ -d ${GIT_DIR}/shell-utility/tools/java-install ]; then
+        cd ${GIT_DIR}/shell-utility/tools/java-install
         # ./install-openjdk8-Ubuntu18.sh
         # latest JDK 11 as default from Ubuntu 20
         ./install-java-Ubuntu-OpenJDK.sh
@@ -169,8 +169,8 @@ fi
 
 #### ---- Docker setup ---- ####
 function docker_install() {
-    if [ -d ${ROOT_DIR}/shell-utility/docker/installation ]; then
-        cd ${ROOT_DIR}/shell-utility/docker/installation
+    if [ -d ${GIT_DIR}/shell-utility/docker/installation ]; then
+        cd ${GIT_DIR}/shell-utility/docker/installation
         ./docker-ce-install-Ubuntu.sh
     fi
 }
@@ -204,7 +204,9 @@ function setupDesktop() {
     # ref: https://ubuntuforums.org/showthread.php?t=2331219
     # -- To span desktop background images across two monitors
     gsettings set org.gnome.desktop.background picture-options spanned
-    #gsettings set org.gnome.nautilus.preferences always-use-location-entry true
+    
+    # -- To display actual FULL File Path (easier to copy the Path) instead visual 'bread crums as path' (not easy to copy)
+    gsettings set org.gnome.nautilus.preferences always-use-location-entry true
     
     ## How to "Tweak" two monitor for multiple Workspace
     # You can install "gnome-tweak-tool" via "sudo apt install gnome-tweak-tool".
@@ -212,3 +214,9 @@ function setupDesktop() {
     # Then go to Workspaces > Display Handling > And choose Workspaces span displays
 }
 setupDesktop
+
+function customize_local_bin_to_use_shell_utility() {
+    cp ${GIT_DIR}/shell-utility/docker/bin/* $HOME/bin/
+    cp ${GIT_DIR}/shell-utility/common/bin/* $HOME/bin/
+}
+customize_local_bin_to_use_shell_utility

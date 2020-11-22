@@ -90,3 +90,8 @@ EOF
 }
 setup_aliases
 
+function customize_local_bin_to_use_shell_utility() {
+    cp ${GIT_DIR}/shell-utility/docker/bin/* $HOME/bin/
+    cp ${GIT_DIR}/shell-utility/common/*.sh $HOME/bin/
+}
+customize_local_bin_to_use_shell_utility
