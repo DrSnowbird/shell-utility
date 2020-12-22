@@ -3,7 +3,7 @@
 # Ref: https://github.com/cilynx/rtl88x2bu
 
 # To Remove previous driver installations
-# sudo dkms remove 88x2bu --all 
+# sudo dkms remove rtl88x2bu --all 
 
 echo "... Install Required DKMS modules:"
 sudo apt list linux-headers-generic build-essential dkms git
