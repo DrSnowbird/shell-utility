@@ -157,9 +157,9 @@ fi
 function java_install() {
     if [ -d ${GIT_DIR}/shell-utility/tools/java-install ]; then
         cd ${GIT_DIR}/shell-utility/tools/java-install
-        # ./install-openjdk8-Ubuntu18.sh
+        ./install-openjdk8-Ubuntu.sh
         # latest JDK 11 as default from Ubuntu 20
-        ./install-java-Ubuntu-OpenJDK.sh
+        # ./install-java-Ubuntu-OpenJDK.sh
     fi
     java -
 }
