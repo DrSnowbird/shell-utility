@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
   
 if [ $# -lt 1 ]; then
     echo "Need project directory name for creating venv... Abort now!"
@@ -13,6 +13,16 @@ fi
 PROJECT_HOME=${1:-my_venv}
 
 PYTHON_VERSION=3
+
+function uninstall_intall_venv() {
+    python3  -m pip install -U pip
+
+    sudo pip3 uninstall virtualenv
+    #pip install --user virtualenv
+    sudo pip3 install virtualenv
+    
+    sudo pip install virtualenvwrapper
+}
 
 ###########################################################################
 #### ---------------------- DON'T CHANGE BELOW ----------------------- ####
@@ -44,6 +54,10 @@ fi
 
 #### ---- Detect [virtualenvwrapper] is installed ---- ####
 #### common location: /usr/local/bin/virtualenvwrapper.sh
+
+if [ "`which virtualenvwrapper.sh`" = "" ]; then
+    echo uninstall_intall_venv
+fi
 VIRTUALENVWRAPPER_SHELL=`which virtualenvwrapper.sh`
 if [ "${VIRTUALENVWRAPPER_SHELL}" = "" ]; then
     echo "**** ERROR: Can't find virtualenvwrapper.sh script! .. Abort setup!"
