@@ -1,18 +1,19 @@
-#!/bin/bash -x
+#!/bin/bash
 
 -- ref: https://gist.github.com/stephenhardy/5470814
 
-echo "--- Usage: <GIT_REPO> [<GIT_USER>]"
+
+echo "--- Usage: $0 <GIT_REPO_URL>"
 echo "e.g."
-echo "  for git@github.com:DrSnowbird/json-server-docker.git full GIT Repo:"
-echo "  GIT_REPO: json-server-docker"
-echo "  GIT_USER: DrSnowbird"
+echo "  $0 git@github.com:DrSnowbird/json-server-docker.git "
 echo
 
 if [ $# -lt 1 ]; then
     echo "*** ERROR: need to provide, at least, GIT Repo name (without .git)"
     exit 1
 fi
+GIT_REPO_URL=${1}
+
 
 -- Remove the history from
 rm -rf .git
@@ -29,6 +30,6 @@ git remote rm origin
 
 -- push to the github remote repos ensuring you overwrite history
 #git remote add origin git@github.com:DrSnowbird/json-server-docker.git
-git remote add origin git@github.com:${GIT_USER}/${GIT_REPO}.git
+git remote add origin ${GIT_REPO_URL}
 
 git push -u --force origin master

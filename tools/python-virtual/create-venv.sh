@@ -15,6 +15,7 @@ PROJECT_HOME=${1:-my_venv}
 PYTHON_VERSION=3
 
 function uninstall_intall_venv() {
+    # sudo apt-get install python3 python3-dev python3-setuptools python3-pip
     python3  -m pip install -U pip
 
     sudo pip3 uninstall virtualenv
@@ -56,7 +57,7 @@ fi
 #### common location: /usr/local/bin/virtualenvwrapper.sh
 
 if [ "`which virtualenvwrapper.sh`" = "" ]; then
-    echo uninstall_intall_venv
+    echo "To unisntll: call uninstall_intall_venv"
 fi
 VIRTUALENVWRAPPER_SHELL=`which virtualenvwrapper.sh`
 if [ "${VIRTUALENVWRAPPER_SHELL}" = "" ]; then
