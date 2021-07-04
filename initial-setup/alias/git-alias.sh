@@ -4,13 +4,14 @@
 gsave() {
     commit_text="`date`:`git status |grep modified|sed 's/[\t ]*//g'`"
     # commit_text="${1:-commit all changes at } `date`"
-    git pull origin master
+    branch=`git branch | grep '*'|awk '{print $2}'`
+    git pull origin ${branch:-master}
     git status
     git add -A :/
     echo "commit_text: ${1:-$commit_text}"
     echo "..........."
     git commit -a -m "${1:-$commit_text}"
-    git push origin master
+    git push origin ${branch:-master}
 }
 
 gdt() {
