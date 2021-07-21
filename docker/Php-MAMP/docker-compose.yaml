@@ -1,0 +1,31 @@
+version: '3.3' 
+
+services:
+    php:
+        image: php:apache
+        container_name: php
+        restart: unless-stopped
+        volumes:
+            - $PWD:/var/www
+        ports:
+            - 28080:80
+            - 28443:443
+        links:
+            - mysql
+
+    mysql:
+        image: mysql:5.7
+        container_name: mysql-4-php
+        restart: unless-stopped
+        environment:
+            - MYSQL_DATABASE=app
+            - MYSQL_USER=app
+            - MYSQL_PASSWORD=app
+            - MYSQL_ROOT_PASSWORD=password
+        ports:
+            - 23306:3306
+        volumes:
+            - mysql:/var/lib/mysql
+
+volumes:
+    mysql:
