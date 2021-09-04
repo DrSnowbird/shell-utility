@@ -50,18 +50,16 @@ fi
 #### ---- Install git ---- ####
 function install_git() {
     sudo apt install -y git meld
-    USER_EMAIL=${USER}@openkbs.org
-    USER_NAME=DrSnowbird
-    git config --global user.email "${USER_EMAIL}"
-    git config --global user.name "${USER_NAME}"
+    #USER_EMAIL=${USER}@openkbs.org
+    #USER_NAME=${USER}
+    #git config --global user.email "${USER_EMAIL}"
+    #git config --global user.name "${USER_NAME}"
     if [ ! -d ${GIT_DIR}/shell-utility ]; then
         cd ${GIT_DIR}
         git clone git@github.com:DrSnowbird/shell-utility.git
     fi
 }
-if [ "`which git`" = "" ]; then
-    install_git
-fi
+install_git
 
 
 #########################################################################
