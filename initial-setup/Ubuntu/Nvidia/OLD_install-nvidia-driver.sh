@@ -1,9 +1,10 @@
 #!/bin/bash -x
 
-RECOMMENDED_DRIVER=`ubuntu-drivers devices |grep -i recommended|awk '{print $3}'
-nvidia-driver-460`
-sudo apt install -y ${RECOMMENDED_DRIVER}
+RECOMMENDED_DRIVER=`ubuntu-drivers devices 2>&1 |grep -i recommended|awk '{print $3}'|grep "^nvidia"`
 
+echo ">>>> RECOMMENDED_DRIVER=${RECOMMENDED_DRIVER}"
+
+sudo apt install -y ${RECOMMENDED_DRIVER}
 
 echo "Once the installation is completed, reboot your system:"
 

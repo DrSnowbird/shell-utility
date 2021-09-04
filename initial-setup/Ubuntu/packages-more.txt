@@ -11,7 +11,7 @@ curl
 #libssl-dev
 virtualenv
 # Gnome utility for setting preference
-#gnome-tweak-tool
+gnome-tweak-tool
 #dconfi-tools
 # File Manager with Tree view of directory
 #thunar

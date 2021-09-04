@@ -5,6 +5,7 @@
 # To Remove previous driver installations
 # sudo dkms remove rtl88x2bu --all 
 
+sudo apt-get update -y
 echo "... Install Required DKMS modules:"
 sudo apt list linux-headers-generic build-essential dkms git
 sudo apt -y install linux-headers-generic build-essential dkms git

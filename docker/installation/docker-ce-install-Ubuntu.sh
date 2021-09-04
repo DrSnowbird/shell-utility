@@ -51,7 +51,7 @@ function install_new_docker() {
 
     #### ---- Install Docker Community Edition ---- ####
     sudo apt-get update -y
-    sudo apt-cache policy docker-ce
+    sudo apt-cache policy docker-ce -y
     yesNoContinue
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 

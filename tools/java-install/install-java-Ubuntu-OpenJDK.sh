@@ -50,10 +50,17 @@ if [ $prevent_future_update -gt 0 ]; then
     sudo update-alternatives --query java | grep -q 'Status: manual'
 fi
 
-## -- Setup Shell profile:
-echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bashrc
-echo "export PATH=${PATH}:\${JAVA_HOME}/bin" >> ~/.bashrc
+#### -- Setup Shell profile:
+#### ---- Java setup ---- ####
+cat >> ~/.bashrc << EOF
 
+#### ---- Java setup ---- ####
+# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export PATH=${JAVA_HOME}:${PATH}
+
+
+EOF
 source ~/.bashrc
 java -version
 

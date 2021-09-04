@@ -1,6 +1,9 @@
 #!/bin/bash -x
 
-BASE_DISK_MOUNT=/mnt/seagate-3tb/
+BASE_DISK_MOUNT=$HOME
+if [ -s /mnt/seagate-3tb/ ]; then
+    BASE_DISK_MOUNT=/mnt/seagate-3tb/
+fi
 
 GIT_DIR=${BASE_DISK_MOUNT}/git-public
 
@@ -60,66 +63,48 @@ if [ "`which git`" = "" ]; then
     install_git
 fi
 
+
 #########################################################################
 #### ---- Customization for multiple virtual python environment ---- ####
 ####      (most recommended approach and simple to switch venv)      ####
 #########################################################################
 function setup_virtualenvwrapper_in_bashrc() {
-cat << EOF >> ~/.bashrc
-#########################################################################
-#### ---- Customization for multiple virtual python environment ---- ####
-#########################################################################
+    if [ `which python3` == "" ]; then 
+        echo ">>>> ERROR: Python 3 is not install yet! Abort!"
+        exit 1
+    fi
 
-# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_PYTHON=`which python3`
-#source /usr/local/bin/virtualenvwrapper.sh
-source `which virtualenvwrapper.sh`
-#source /home/${USER}/.local/bin/virtualenvwrapper.sh
-export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
-if [ ! -d $WORKON_HOME ]; then
-    mkdir -p $WORKON_HOME
-fi
-EOF
+    cd ${GIT_DIR}/shell-utility/tools/python-virtual/Ubutnu-Python-virutalenvwrapper
+    cp ./*.sh ${HOME}/bin/
+    ./venv_create_and_install_virtualenv.sh
+    
 }
-if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
-    #if [ "$WORKON_HOME" != "" ]; then
-    setup_virtualenvwrapper_in_bashrc
+
+if [ `which virtualenvwrapper.sh` != "" ]; then 
+    if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
+        #if [ "$WORKON_HOME" != "" ]; then
+        setup_virtualenvwrapper_in_bashrc
+    fi
 fi
 
 #### ---- Setup Aliases---- ####
 function setup_aliases() {
-    alias_setup_already="`cat ~/.bashrc | grep git-alias.sh`"
-    if [ "$alias_setup_already" != "" ]; then
-        cat << EOF >> ~/.bashrc
-        
-#### ---- Customized aliases ----
-####
+    if [ "$alias_setup_already" == "" ]; then
+        mkdir -p ~/bin
+        cp ${GIT_DIR}/shell-utility/initial-setup/alias/* ${HOME}/bin/
+        chmod +x ~/bin/*.sh
+        cat >> ~/.bashrc << EOF
 
+#### ---- alias setup ---- ####
 . ~/bin/git-alias.sh
 . ~/bin/docker-alias.sh
-. ~/bin/my-alias.sh
-
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=\${JAVA_HOME}:\${PATH}
+#. ~/bin/my-alias.sh
 
 EOF
     else
 	    echo "..... setup_aliases(): already being set up!"
     fi
 
-    if [ ! -s ~/bin/git-alias.sh ]; then
-        cd ${GIT_DIR}/shell-utility/initial-setup/alias
-        mkdir -p ~/bin
-        cp git-alias.sh ~/bin
-        cp docker-alias.sh ~/bin
-        cd
-        chmod +x ~/bin/*.sh
-        source ~/.bashrc
-        env
-    else
-        echo "*** ERROR: can't find ~/bin/git-alias.sh! Abort!"
-    fi
-    alias
 }
 setup_aliases
 
@@ -154,18 +139,20 @@ if [ ! -s ~/.ssh/id_rsa ]; then
 fi
 
 #### ---- OpenJDK setup ---- ####
+#### ---- OpenJDK setup ---- ####
 function java_install() {
     if [ -d ${GIT_DIR}/shell-utility/tools/java-install ]; then
         cd ${GIT_DIR}/shell-utility/tools/java-install
-        ./install-openjdk8-Ubuntu.sh
+        ./install-java-Ubuntu-OpenJDK.sh
         # latest JDK 11 as default from Ubuntu 20
         # ./install-java-Ubuntu-OpenJDK.sh
     fi
-    java -
+    java -version
 }
-if [ "`which java`" = "" ]; then
-    java_install
-fi
+#if [ "`which java`" = "" ]; then
+#    java_install
+#fi
+java_install
 
 #### ---- Docker setup ---- ####
 function docker_install() {
