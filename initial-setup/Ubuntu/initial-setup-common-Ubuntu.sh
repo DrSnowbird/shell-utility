@@ -183,6 +183,14 @@ if [ "`which pip3`" = "" ]; then
     pip3_install
 fi
 
+#### ---- Maven setup ---- ####
+function install_maven() {
+    sudo apt install maven -y
+}
+if [ "`which mvn`" = "" ]; then
+    install_maven
+fi
+
 #### ---- Desktop setup ---- ####
 function setupDesktop() {
     # ref: https://askubuntu.com/questions/89417/how-to-span-single-wallpaper-over-dual-monitors
