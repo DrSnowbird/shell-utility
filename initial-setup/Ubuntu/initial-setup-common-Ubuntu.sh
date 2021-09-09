@@ -1,12 +1,36 @@
 #!/bin/bash -x
 
-BASE_DISK_MOUNT=$HOME
-if [ -s /mnt/seagate-3tb/ ]; then
-    BASE_DISK_MOUNT=/mnt/seagate-3tb/
-fi
+BASE_DISK_MOUNT=${1:-$HOME}
+
+CONT_YES=1
+function askToContinue() {
+    read -p "Are you sure to continue (Yes/No)?" -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo ".... $1"
+    else
+        CONT_YES=0
+        exit 0
+    fi
+}
+echo $CONT_YES
+
+function uage() {
+	if [ $# -lt 1 ]; then
+	    echo "**** WARNING: provide the base disk mount point for git-public"
+	fi
+}
+
+#if [ -s /mnt/seagate-3tb/ ]; then
+#    BASE_DISK_MOUNT=/mnt/seagate-3tb/
+#fi
+
+echo "BASE_DISK_MOUNT=$BASE_DISK_MOUNT"
+askToContinue "Continue to install / setup"
 
 GIT_DIR=${BASE_DISK_MOUNT}/git-public
-
+:
 #mkdir -p ${GIT_DIR}
 
 if [ ! -d ${GIT_DIR} ]; then
@@ -17,11 +41,11 @@ fi
 #### ---- Disable Sudo pasword requirement ---- ####
 function disable_sudo_password() {
     # sudo viuser1sudo
-    if [ ! "`sudo cat /etc/sudoers | grep ${USER}`" = "" ]; then
+    if [ "`sudo cat /etc/sudoers | grep ${USER}`" = "" ]; then
         echo "${USER}     ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
     fi
 }
-#disable_sudo_password
+disable_sudo_password
 
 #### ---- Install common packages ---- ####
 function install_common_packages() {
@@ -31,7 +55,7 @@ function install_common_packages() {
         fi
     done
 }
-#install_common_packages
+install_common_packages
 
 #### ---- Install Google-Chrome ---- ####
 function install_google_chrome() {
@@ -42,6 +66,7 @@ function install_google_chrome() {
     #sudo gdebi google-chrome-stable_current_amd64.deb
     cat /etc/apt/sources.list.d/google-chrome.list
     which google-chrome
+    rm -f google-chrome-stable_current_amd64.deb
 }
 if [ "`which google-chrome`" = "" ]; then
     install_google_chrome
@@ -106,12 +131,17 @@ EOF
 }
 setup_aliases
 
-#### ---- Install Docker ---- ####
-function install_docker() {
-    cd ${GIT_DIR}/shell-utility/docker/installation
-    ./docker-ce-install-Ubuntu.sh
+
+#### ---- Docker setup ---- ####
+function docker_install() {
+    if [ -d ${GIT_DIR}/shell-utility/docker/installation ]; then
+        cd ${GIT_DIR}/shell-utility/docker/installation
+        ./docker-ce-install-Ubuntu.sh
+    fi
 }
-install_docker
+if [ "`which docker`" = "" ]; then
+    docker_install
+fi
 
 #### ---- Install SSH daemon ---- ####
 function ssh_daemon() {
@@ -137,7 +167,6 @@ if [ ! -s ~/.ssh/id_rsa ]; then
 fi
 
 #### ---- OpenJDK setup ---- ####
-#### ---- OpenJDK setup ---- ####
 function java_install() {
     if [ -d ${GIT_DIR}/shell-utility/tools/java-install ]; then
         cd ${GIT_DIR}/shell-utility/tools/java-install
@@ -151,17 +180,6 @@ function java_install() {
 #    java_install
 #fi
 java_install
-
-#### ---- Docker setup ---- ####
-function docker_install() {
-    if [ -d ${GIT_DIR}/shell-utility/docker/installation ]; then
-        cd ${GIT_DIR}/shell-utility/docker/installation
-        ./docker-ce-install-Ubuntu.sh
-    fi
-}
-if [ "`which docker`" = "" ]; then
-    docker_install
-fi
 
 #### ---- Python3' pip3 setup ---- ####
 function pip3_install() {
