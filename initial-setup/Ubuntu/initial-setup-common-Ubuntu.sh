@@ -30,8 +30,9 @@ echo "BASE_DISK_MOUNT=$BASE_DISK_MOUNT"
 askToContinue "Continue to install / setup"
 
 GIT_DIR=${BASE_DISK_MOUNT}/git-public
-:
-#mkdir -p ${GIT_DIR}
+if [ ! -s ${GIT_DIR} ]; then
+    mkdir -p ${GIT_DIR}
+fi
 
 if [ ! -d ${GIT_DIR} ]; then
     echo "${GIT_DIR} not found! Cant' continue! Abort! "
@@ -143,10 +144,21 @@ if [ "`which docker`" = "" ]; then
     docker_install
 fi
 
+# docker/installation
+function NVIDIA_docker_install() {
+    if [ -d ${GIT_DIR}/shell-utility/docker/installation ]; then
+        cd ${GIT_DIR}/shell-utility/docker/installation
+        ./nvidia-docker-install.sh
+    fi
+}
+if [ "`which docker`" = "" ]; then
+    NVIDIA_docker_install
+fi
+
 #### ---- Install SSH daemon ---- ####
 function ssh_daemon() {
     sudo apt-get install -y openssh-server
-    sudo service sshd status
+    sudo service sshd status | cat
     cat /etc/ssh/sshd_config
     sudo systemctl enable ssh
 }
@@ -231,3 +243,7 @@ function customize_local_bin_to_use_shell_utility() {
     cp ${GIT_DIR}/shell-utility/common/bin/* $HOME/bin/
 }
 customize_local_bin_to_use_shell_utility
+
+#### ---- clean up ---- ####
+sudo apt autoremove -y
+
