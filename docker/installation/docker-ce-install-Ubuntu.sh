@@ -47,14 +47,14 @@ function install_new_docker() {
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
     #### ---- Install Docker Community Edition ---- ####
-    sudo apt-get update -y
-    sudo apt-cache policy docker-ce
-    yesNoContinue
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-
+    curl https://get.docker.com | sh && sudo systemctl --now enable docker
+    #sudo apt-get update -y
+    #sudo apt-cache policy docker-ce
+    #yesNoContinue
+    #sudo apt-get install -y docker-ce-cli containerd.io
     #sudo systemctl status docker
     sudo systemctl start docker
-    sudo systemctl enable docker
+    #sudo systemctl enable docker
 
     #Add your user to the docker group to setup permissions. Make sure to restart your machine after executing this command.
     #su - ${USER}
