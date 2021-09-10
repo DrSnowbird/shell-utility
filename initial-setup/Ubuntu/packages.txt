@@ -6,7 +6,9 @@ git
 meld
 wget
 vim
+vlc
 curl
+gparted
 #wbep image viewer
 gthumb
 gnome-tweaks 

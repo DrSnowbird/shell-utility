@@ -1,7 +1,8 @@
 #!/bin/bash -x
 
+remove_old=1
 nvidia_pkg=`$(dpkg -l | grep nvidia-driver | awk '{print $2}')`
-remove_old=0
+
 if [ $remove_old -gt 0 ]; then
     if [ "${nvidia_pkg}" != "" ]; then
         sudo dpkg -P $(dpkg -l | grep nvidia-driver | awk '{print $2}')
