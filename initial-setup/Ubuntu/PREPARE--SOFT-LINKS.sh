@@ -38,24 +38,46 @@ function setup_APP_RemoteDisk_Mapping() {
     fi
     
     #### ---- Setup: Soft-Links at HOME: ---- ####
-    APP_DIRS="Downloads git-public data-docker"
+    APP_DIRS="Downloads Pictures Videos git-public data-docker"
     if [ ! -s ${TOOLS_DIR} ]; then
         echo "**** ERROR: Can't continue: Missing TOOLS_DIR: ${TOOLS_DIR}"
         exit 1
     else
         ## -- OK, TOOLS_DIR existing: -- ##
-	for app_dir in ${APP_DIRS}; do
-    	echo "--------- app_dir: $app_dir ----------"
-            if [ ! -s ${REMOTE_DISK}/${app_dir} ]; then
-    	    mkdir -p ${REMOTE_DISK}/${app_dir}
-    	else
-    	    echo "---- INFO: FOUND: ${REMOTE_DISK}/${app_dir} "
-    	fi
-    	echo ".... Remove old soft-link: ~/${app_dir}"
-    	rm -f ~/${app_dir}
-    	echo ".... Creating soft-link: ln -s ${REMOTE_DISK}/${app_dir} ~/${app_dir} "
-        ln -s ${REMOTE_DISK}/${app_dir} ~/${app_dir}
-    	ls -al ~/${app_dir}
+	    for app_dir in ${APP_DIRS}; do
+	        APP_DIR=${HOME}/${app_dir}
+	        echo -e "=================== APP_DIR: ${APP_DIR} ======================="
+            echo "---- 1. Save current /var/lib/docker in case we need it"
+
+            if [ -s ${APP_DIR} ]; then
+            
+                if [[ -L "${APP_DIR}" && -d "${APP_DIR}" ]]; then
+                    echo "---- Found: ${APP_DIR} is a symlink to a directory: Remove it!"
+                    rm -f ${APP_DIR}
+                else
+                    echo "${APP_DIR} is a physical directory"
+                    echo "---- INFO: FOUND Existing APP directory: ${APP_DIR}: SAVE it first!"
+                    SAVED_APP_DIR=${APP_DIR}.`date "+%Y-%M-%d"`
+                    echo ".... SAVE existing ${APP_DIR}"
+                    mv ${APP_DIR} ${SAVED_APP_DIR}
+                fi
+            fi
+
+        	APP_DIR_REMOTE=${REMOTE_DISK}/${app_dir}
+        	echo "---- 2. Prepare remote APP directory: ${APP_DIR_REMOTE}"
+        	
+            if [ ! -s ${APP_DIR_REMOTE} ]; then
+        	    sudo mkdir -p ${APP_DIR_REMOTE}
+        	    sudo chown -R ${USER}:${USER} ${APP_DIR_REMOTE}
+                sudo chmod -R 0755 ${APP_DIR_REMOTE}
+        	else
+        	    echo "---- INFO: FOUND: ${APP_DIR_REMOTE}: -- Just REUSE it! "
+        	fi
+        	
+            echo "---- 3. Create soft-link: ${APP_DIR} -> ${APP_DIR_REMOTE}"
+            ln -s ${APP_DIR_REMOTE} ${APP_DIR}
+	        ls -al ${APP_DIR_REMOTE} ${APP_DIR}
+	    
         done
     
     fi
@@ -75,7 +97,8 @@ function setup_Docker_RemoteDisk_Mapping() {
         #### ---- Setup: /var/lib/docker to Remote Docker Soft-Links : ---- ####
         DOCKER_DIR=/var/lib/${DOCKER_NAME}
         DOCKER_DIR_REMOTE=${DISK_BASE}/${DOCKER_NAME}
-        
+	    echo -e "=================== DOCKER_DIR: ${DOCKER_DIR} ======================="
+	        
         echo "---- 1. Save current /var/lib/docker in case we need it"
         if [ -s ${DOCKER_DIR} ]; then
             echo "---- INFO: FOUND Existing Docker: ${DOCKER_DIR}"
@@ -97,5 +120,5 @@ function setup_Docker_RemoteDisk_Mapping() {
 	    sudo ls -al ${DOCKER_DIR_REMOTE} ${DOCKER_DIR}
     fi
 }
-#setup_Docker_RemoteDisk_Mapping
+setup_Docker_RemoteDisk_Mapping
 
