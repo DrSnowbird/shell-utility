@@ -7,11 +7,12 @@ echo "$(basename $0) <Anaconda3_HOME_PATH>"
 #### You just cut-and-paste the following code into the end of ~/.bashrc file
 ####
 
-CONDA3_HOME=${1:-/mnt/seagate-3tb/tools/Anaconda3}
+CONDA3_HOME=${1:-~/anaconda3}
+
 FIND_SETUP=`cat ~/.bashrc | grep "conda3_initialize"`
 if [ "${FIND_SETUP}" = "" ]; then
 cat >> ~/.bashrc <<EOF
-function conda3_initialize_2() {
+function conda3_initialize() {
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="\$(${CONDA3_HOME}/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
