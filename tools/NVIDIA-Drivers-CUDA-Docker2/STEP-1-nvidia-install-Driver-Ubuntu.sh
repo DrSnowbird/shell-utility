@@ -14,7 +14,7 @@ if [ $remove_old -gt 0 ]; then
 fi
 
 RECOMMENDED_DRIVER=`ubuntu-drivers devices |grep "recommended"|awk '{print $3}' `
-RECOMMENDED_DRIVER=nvidia-driver-460
+#RECOMMENDED_DRIVER=nvidia-driver-470
 
 echo -e "RECOMMENDED_DRIVER= ${RECOMMENDED_DRIVER}"
 

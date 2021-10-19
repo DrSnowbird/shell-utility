@@ -10,6 +10,8 @@ vim
 curl
 #libssl-dev
 virtualenv
+# GTK
+libcanberra-gtk-module
 # Gnome utility for setting preference
 gnome-tweak-tool
 #dconfi-tools
