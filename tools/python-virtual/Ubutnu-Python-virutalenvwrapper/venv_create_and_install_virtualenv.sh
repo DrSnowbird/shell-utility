@@ -45,20 +45,20 @@ function setup_venv_bashrc() {
         echo -e "**** ERROR: virtualenvwrapper.sh : NOT Found!"
     else
         venv_setup_already="`cat ~/.bashrc | grep VIRTUALENVWRAPPER_PYTHON`"
-        if [ "$venv_setup_already" != "" ]; then
+        if [ "$venv_setup_already" == "" ]; then
             cat >> ~/.bashrc << EOF
+            
 #####################################################
 #### ---- Setup: virtual python environment ---- ####
 #####################################################
-
-# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_PYTHON=`which python3`
-#source /usr/local/bin/virtualenvwrapper.sh
-source `which virtualenvwrapper.sh`
-#source /home/${USER}/.local/bin/virtualenvwrapper.sh
-export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
-if [ ! -d $WORKON_HOME ]; then
-    mkdir -p $WORKON_HOME
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+#export VIRTUALENVWRAPPER_PYTHON=`which python3`
+source /usr/local/bin/virtualenvwrapper.sh
+#source `which virtualenvwrapper.sh`
+#source ~/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=~/Envs
+if [ ! -d \$WORKON_HOME ]; then
+    mkdir -p \$WORKON_HOME
 fi
 EOF
         fi

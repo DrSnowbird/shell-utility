@@ -10,11 +10,12 @@ sudo apt-get update
 
 ubuntu-drivers devices
 
-sudo apt-get install nvidia-driver-460
+NVIDIA_DRIVER_VERSION=470
+sudo apt-get install nvidia-driver-${NVIDIA_DRIVER_VERSION}
 
 nvidia-smi
 
-wget https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda_11.2.2_460.32.03_linux.run
+wget https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda_11.2.2_${NVIDIA_DRIVER_VERSION}.32.03_linux.run
 
 echo "-------------------------------------------------------------"
 echo "-------------------------------------------------------------"
@@ -37,9 +38,9 @@ function askToContinue() {
 echo $CONT_YES
 askToContinue
 
-sudo sh cuda_11.2.2_460.32.03_linux.run
+sudo sh cuda_11.2.2_${NVIDIA_DRIVER_VERSION}.32.03_linux.run
 
-rm cuda_11.2.2_460.32.03_linux.run
+rm cuda_11.2.2_${NVIDIA_DRIVER_VERSION}.32.03_linux.run
 
 echo "----- Download CUDA cuDNN v8.1.0 ...."
 

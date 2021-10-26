@@ -54,7 +54,7 @@ function setup_bashrc() {
     else
         echo "## -- Anaconda Cerificate setup: --" >> ~/.bashrc
         echo "export CURL_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt" >> ~/.bashrc
-        echo "export PATH=$HOME/anaconda${PYTHON_VERSION}/bin:$PATH"
+        echo "export PATH=$PATH:$HOME/anaconda${PYTHON_VERSION}/bin"
     fi
     source "$HOME/.bashrc"
 }
