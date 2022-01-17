@@ -75,7 +75,8 @@ function cuda_toolkit() {
     sudo sh ${CUDA_TOOLKIT}
     rm ${CUDA_TOOLKIT}
 }
-cuda_toolkit
+#cuda_toolkit
+# Nvidia driver already includes CUDA
 
 ##################################
 #### ---- cudnn toolkit: ---- ####

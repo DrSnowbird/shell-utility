@@ -1,7 +1,5 @@
 #!/bin/bash -x
 
-#function install_latest_Docker() {
-#}
 #install_latest_Docker
 
 function install_Nvidia_Container_Runtime() {
