@@ -1,0 +1,66 @@
+./STEP-3-nvidia-cuda-Ubuntu20.04.sh 
++ set -e
++ install_CUDA_toolkit_using_Shell
++ wget https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run
+--2022-01-22 13:48:46--  https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run
+Resolving developer.download.nvidia.com (developer.download.nvidia.com)... 152.195.19.142
+Connecting to developer.download.nvidia.com (developer.download.nvidia.com)|152.195.19.142|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3488951771 (3.2G) [application/octet-stream]
+Saving to: ‘cuda_11.6.0_510.39.01_linux.run’
+
+cuda_11.6.0_510.39.01_ 100%[==========================>]   3.25G  36.5MB/s    in 91s     
+
+2022-01-22 13:50:18 (36.4 MB/s) - ‘cuda_11.6.0_510.39.01_linux.run’ saved [3488951771/3488951771]
+
++ sudo sh cuda_11.6.0_510.39.01_linux.run
+===========
+= Summary =
+===========
+
+Driver:   Not Selected
+Toolkit:  Installed in /usr/local/cuda-11.6/
+
+Please make sure that
+ -   PATH includes /usr/local/cuda-11.6/bin
+ -   LD_LIBRARY_PATH includes /usr/local/cuda-11.6/lib64, or, add /usr/local/cuda-11.6/lib64 to /etc/ld.so.conf and run ldconfig as root
+
+To uninstall the CUDA Toolkit, run cuda-uninstaller in /usr/local/cuda-11.6/bin
+***WARNING: Incomplete installation! This installation did not install the CUDA Driver. A driver of version at least 510.00 is required for CUDA 11.6 functionality to work.
+To install the driver using this installer, run the following command, replacing <CudaInstaller> with the name of this run file:
+    sudo <CudaInstaller>.run --silent --driver
+
+Logfile is /var/log/cuda-installer.log
++ setup_CUDA_LIB_PATH
+++ cat /home/user1/.bashrc
+++ grep /usr/local/cuda
++ setup_before='export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}'
++ echo '................ You need to setup your PATH and LIB'
+................ You need to setup your PATH and LIB
++ echo 'export PATH=/usr/local/cuda/bin:/usr/local/cuda/bin:/home/user1/bin:/usr/lib/jvm/java-11-openjdk-amd64:/home/user1/.rover/bin:/home/user1/.local/bin:/home/user1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/user1/.local/bin:/opt/gradle/latest/bin'
+export PATH=/usr/local/cuda/bin:/usr/local/cuda/bin:/home/user1/bin:/usr/lib/jvm/java-11-openjdk-amd64:/home/user1/.rover/bin:/home/user1/.local/bin:/home/user1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/user1/.local/bin:/opt/gradle/latest/bin
++ echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/lib64'
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/lib64
++ echo
+
++ '[' 'export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' '!=' '' ']'
++ cat
++ source /home/user1/.bashrc
+++ case $- in
+++ return
++ echo
+
++ echo '.... Verify driver version:'
+.... Verify driver version:
++ cat /proc/driver/nvidia/version
+NVRM version: NVIDIA UNIX x86_64 Kernel Module  470.86  Tue Oct 26 21:55:45 UTC 2021
+GCC version:  gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04) 
++ echo '.... Verify the CUDA Toolkit version: '
+.... Verify the CUDA Toolkit version: 
++ nvcc -V
+./STEP-3-nvidia-cuda-Ubuntu20.04.sh: line 66: nvcc: command not found
+
+
+>>>>> This means you need to setup LD_LIBRARY_PATH to make it work!!!!

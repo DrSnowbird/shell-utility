@@ -114,4 +114,4 @@ venv.bak/
 tmp.txt
 
 **/*SAVE/
-
+**/*.run

@@ -3,6 +3,7 @@
 set -e
 
 # ref: Nvidia CUDA toolkit installation
+# https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=runfile_local
 # https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=deblocal
 
 # ref: nvidia persistence
@@ -15,18 +16,29 @@ function install_CUDA_toolkit() {
 
         wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
         sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
-        wget https://developer.download.nvidia.com/compute/cuda/11.4.2/local_installers/cuda-repo-ubuntu2004-11-4-local_11.4.2-470.57.02-1_amd64.deb
-        sudo dpkg -i cuda-repo-ubuntu2004-11-4-local_11.4.2-470.57.02-1_amd64.deb
-        sudo apt-key add /var/cuda-repo-ubuntu2004-11-4-local/7fa2af80.pub
+        wget https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda-repo-ubuntu2004-11-6-local_11.6.0-510.39.01-1_amd64.deb
+        sudo dpkg -i cuda-repo-ubuntu2004-11-6-local_11.6.0-510.39.01-1_amd64.deb
+        sudo apt-key add /var/cuda-repo-ubuntu2004-11-6-local/7fa2af80.pub
         sudo apt-get update
         sudo apt-get -y install cuda
-
-        rm -f cuda-repo-ubuntu2004-11-2-local_11.2.2-460.32.03-1_amd64.deb
+        rm -f cuda-repo-ubuntu2004-11-6-local_11.6.0-510.39.01-1_amd64.deb
         
         sudo chmod a+r /usr/local/cuda/include/cudnn.h
     fi
 }
-install_CUDA_toolkit
+# -- use this as simpler steps: --
+function install_CUDA_toolkit_using_Shell() {
+    wget https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run
+    sudo sh cuda_11.6.0_510.39.01_linux.run
+
+    ## -- create soft-link
+    _CUDA_LIB64=`ls -d /usr/local/cuda-* |head -1`
+    if [ -d ${_CUDA_LIB64} ] && [ ! -z "$(ls -A ${_CUDA_LIB64})" ]; then
+        sudo rm -rf /usr/local/cuda
+        sudo ln -s sudo ln -s /usr/local/cuda-11.6 /usr/local/cuda
+    fi
+}
+install_CUDA_toolkit_using_Shell
 
 
 function setup_CUDA_LIB_PATH() {
