@@ -7,7 +7,8 @@ echo "$(basename $0) <Anaconda3_HOME_PATH>"
 #### You just cut-and-paste the following code into the end of ~/.bashrc file
 ####
 
-CONDA3_HOME=${1:-~/anaconda3}
+CONDA3_HOME=${1:-/usr/local}
+if [ ! -d
 
 FIND_SETUP=`cat ~/.bashrc | grep "conda3_initialize"`
 if [ "${FIND_SETUP}" = "" ]; then

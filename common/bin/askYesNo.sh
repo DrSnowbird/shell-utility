@@ -2,7 +2,9 @@
 
 CONT_YES=1
 function askToContinue() {
-    read -p "Are you sure to continue (Yes/No)?" -n 1 -r
+    PROMPT=${1:-"Are you sure to continue (Yes/No)?"}
+    read -p "$PROMPT" -n 1 -r
+    #read -p "Are you sure to continue (Yes/No)?" -n 1 -r
     echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
