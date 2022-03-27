@@ -1,5 +1,5 @@
 #!/bin/bash -x
-
+  
 PYTHON3_TGZ_URL=$(curl -k -s https://www.python.org/downloads/source/ | grep 'tgz'|head -1|cut -d'"' -f2)
 
 PYTHON3_TGZ=$(basename ${PYTHON3_TGZ_URL})
@@ -10,6 +10,9 @@ PYTHON3_VERSION=$(echo ${PYTHON3_VERSION}|cut -d'-' -f2)
 PYTHON3=python${PYTHON3_VERSION}
 
 function install_python3_alt() {
+    sudo apt update -y
+    sudo apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
+
     wget -q --no-check-certificate -c ${PYTHON3_TGZ_URL}
 
     #tar -xf Python-3.10.4.tgz
