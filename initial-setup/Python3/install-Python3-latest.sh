@@ -1,5 +1,12 @@
 #!/bin/bash -x
-  
+
+function usage() {
+    echo -e "---- Usage: $0 [<ENABLE_PYTHON_LATEST: 0, 1>]"
+}
+usage
+
+ENABLE_PYTHON_LATEST=${1:-1}
+
 PYTHON3_TGZ_URL=$(curl -k -s https://www.python.org/downloads/source/ | grep 'tgz'|head -1|cut -d'"' -f2)
 
 PYTHON3_TGZ=$(basename ${PYTHON3_TGZ_URL})
@@ -27,15 +34,21 @@ function install_python3_alt() {
 
     #sudo rm -f /usr/bin/python3
     #sudo ln -s /usr/local/bin/python3.10 /usr/bin/python3
-    sudo rm -f /usr/bin/python3
-    sudo ln -s /usr/local/bin/${PYTHON3} /usr/bin/python3
+    if [ ${ENABLE_PYTHON_LATEST} -gt 0 ]; then
+        sudo rm -f /usr/bin/python3
+        sudo ln -s /usr/local/bin/${PYTHON3} /usr/bin/python3
+        #which python3.10
+        echo -e ">>> Test the latest Python3: "
+        which ${PYTHON3}
+        ${PYTHON3} -V
+    else
+        echo -e ">>> Not to enable the latest Python3, e.g., 3.10"
+    fi
 }
 install_python3_alt
 
-#which python3.10
-which ${PYTHON3}
-${PYTHON3} -V
 
+echo -e ">>> Final Test the latest Python3: "
 python3 -V
 
 python3 -m pip install --upgrade pip
