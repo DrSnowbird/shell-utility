@@ -62,16 +62,15 @@ nvidia_driver
 ##################################
 #wget https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda_11.2.2_${NVIDIA_DRIVER_VERSION}.32.03_linux.run
 function cuda_toolkit() {
-    CUDA_TOOLKIT=cuda_11.5.0_495.29.05_linux.run
-    #wget https://developer.download.nvidia.com/compute/cuda/11.5.0/local_installers/cuda_11.5.0_495.29.05_linux.run
+    # wget https://developer.download.nvidia.com/compute/cuda/11.6.2/local_installers/cuda_11.6.2_510.47.03_linux.run
+    #CUDA_TOOLKIT=cuda_11.5.0_495.29.05_linux.run
+    CUDA_TOOLKIT=cuda_11.6.2_510.47.03_linux.run
     wget https://developer.download.nvidia.com/compute/cuda/11.5.0/local_installers/${CUDA_TOOLKIT}
     echo "-------------------------------------------------------------"
     echo "-------------------------------------------------------------"
     echo "Remember: DO NOT check the option of installing the driver!!!"
     echo "-------------------------------------------------------------"
     echo "-------------------------------------------------------------"
-    #sudo sh cuda_11.2.2_${NVIDIA_DRIVER_VERSION}.32.03_linux.run
-    #sudo sh cuda_11.5.0_495.29.05_linux.run
     sudo sh ${CUDA_TOOLKIT}
     rm ${CUDA_TOOLKIT}
 }
