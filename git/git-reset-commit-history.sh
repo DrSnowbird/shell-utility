@@ -2,6 +2,20 @@
 
 #If you are sure you want to remove all commit history, simply delete the .git directory in your project root (note that it's hidden). Then initialize a new repository in the same folder and link it to the GitHub repository:
 
+function usage() {
+    echo -e "$0 <git folder-path>"
+    echo -e "e.g."
+    echo -e "  $0 ${HOME}/git-public/AI-ML/yolov5-docker"
+}
+
+if [ ! -s "$1" ]; then
+    echo -e "** ERROR: input proejct's GIT folder-path not existing! Abort"
+    echo
+    usage
+    exit 1
+fi
+cd $1
+
 if [ ! -s .git ]; then
     echo "*** Not GIT local repo directory! Abort!"
     exit 1

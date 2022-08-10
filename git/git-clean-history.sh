@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # -- ref: https://gist.github.com/stephenhardy/5470814
 
