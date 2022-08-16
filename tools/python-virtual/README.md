@@ -53,7 +53,7 @@ if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
     setup_virtualenvwrapper_in_bashrc
 fi
 ```
-# STEP-2) To create & activate your default venv environment, say, "my-venv":
+# STEP-2) To create & activate your default venv environment, say, to create a new venv, "my-venv":
 ```
 mkvirtualenv my-venv
 workon my-venv

@@ -55,6 +55,7 @@ fi
 
 #### ---- Detect [virtualenvwrapper] is installed ---- ####
 #### common location: /usr/local/bin/virtualenvwrapper.sh
+
 if [ "`which virtualenvwrapper.sh`" = "" ]; then
     echo "To unisntll: call uninstall_intall_venv"
 fi
@@ -64,9 +65,36 @@ if [ "${VIRTUALENVWRAPPER_SHELL}" = "" ]; then
     exit 1
 fi
 
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+####      (most recommended approach and simple to switch venv)      ####
+#########################################################################
+function setup_virtualenvwrapper_in_bashrc() {
+cat << EOF >> ~/.bashrc
+#########################################################################
+#### ---- Customization for multiple virtual python environment ---- ####
+#########################################################################
+
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=`which python3`
+#source /usr/local/bin/virtualenvwrapper.sh
+source `which virtualenvwrapper.sh`
+#source /home/${USER}/.local/bin/virtualenvwrapper.sh
+export WORKON_HOME=${BASE_DISK_MOUNT}/Envs
+if [ ! -d $WORKON_HOME ]; then
+    mkdir -p $WORKON_HOME
+fi
+EOF
+}
+if [ "`cat $HOME/.bashrc | grep -i virtual`" = "" ]; then
+    #if [ "$WORKON_HOME" != "" ]; then
+    setup_virtualenvwrapper_in_bashrc
+fi
+
 # To create & activate your default venv environment, say, "${PROJECT_HOME}"
 echo "------"
 
+unset PYTHONPATH
 VENV_NAME=$(basename ${PROJECT_HOME})
 VENV_DIR=$(dirname ${PROJECT_HOME})
 
