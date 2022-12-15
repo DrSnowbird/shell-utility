@@ -18,16 +18,27 @@ function remove_old_nvidia_driver() {
 
         sudo apt update -y
         sudo apt upgrade -y
+        sudo apt check
     fi
 }
 
-function install_nvidia_driver() {
-    DRIVER_RUN=https://us.download.nvidia.com/XFree86/Linux-x86_64/510.60.02/NVIDIA-Linux-x86_64-510.60.02.run
-    wget ${DRIVER_RUN}
-    chmod +x ${DRIVER_RUN}
-    sudo sh ./${DRIVER_RUN}
-}
+#function install_nvidia_driver() {
+#    DRIVER_RUN=https://us.download.nvidia.com/XFree86/Linux-x86_64/510.60.02/NVIDIA-Linux-x86_64-510.60.02.run
+#    wget ${DRIVER_RUN}
+#    chmod +x ${DRIVER_RUN}
+#    sudo sh ./${DRIVER_RUN}
+#}
 
+function dual_display_setup() {
+    echo -e ">>>> ---------- Dual Displays Setup/initialization: -----------"
+    dkms status
+    uname -r
+
+    sudo update-initramfs -u
+
+    echo ".... You may have to reboot the Ubuntu system to let it take effect!"
+
+}
 
 #### ---- find the latest suitable NVIDIA Driver version package ---- ####
 #RECOMMENDED_DRIVER=`ubuntu-drivers devices 2>&1 |grep -i recommended|awk '{print $3}'|grep "^nvidia"`
@@ -45,16 +56,19 @@ function install_recommended_nvidia_driver() {
     fi
 
     sudo apt install -y ${RECOMMENDED_DRIVER}
-    echo "Once the installation is completed, reboot your system:"
-    echo "sudo reboot"
-    echo "When the system is back, you can view the status of the graphic card using the nvidia-smi monitoring tool:"
+    echo -e ">>>> Once the installation is completed, reboot your system:"
+    echo -e "     sudo reboot"
+    echo -e ">>>> When the system is back, you can view the status of the graphic card using the nvidia-smi monitoring tool:"
 }
 
 
 # main
 ## -- choose one only below: -- ##
-install_nvidia_driver
-#install_recommended_nvidia_driver
+install_recommended_nvidia_driver
 
-nvidia-smi
+echo -e ">>>> Make sure you 'sudo reboot now' ... to make sure Nvidia Driver is applied! ...."
+echo -e "Then, you can test Nvidia setup with the commond:"
+echo -e "   nvidia-smi"
+
+
 
