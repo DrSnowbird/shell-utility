@@ -1,0 +1,40 @@
+sudo modprobe nvidia
+ubuntu-drivers devices |grep "recommended"|awk '{print $3}'
+sudo apt reinstall nvidia-driver-525-open
+sudo modprobe nvidia
+cd /mnt/user1/DATA/git-public/Base-Containers/shell-utility/tools/NVIDIA-Drivers-CUDA-Docker2/
+ll
+./STEP-3
+./STEP-3-nvidia-cuda-Ubuntu20.04.sh 
+clear
+lspci | grep -i nvidia
+uname -m && cat /etc/*release
+gcc --version
+uname -r
+sudo apt-get install linux-headers-$(uname -r)
+vi /etc/X11/xorg.conf
+sudo nvidia-xconfig
+sudo vi /etc/X11/xorg.conf
+sudo nvidia-xconfig
+start X
+sudo xrandr -q
+sudo apt-key del 7fa2af80
+sudo apt-get install cuda
+sudo apt-get update
+sudo vi /etc/apt/trusted.gpg
+sudo apt-get update
+sudo apt-key del 7fa2af80
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/3bf863cc.pub
+sudo apt-get update
+wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.0-1_all.deb
+vi fix-apt-missing-repository-keys.sh
+chmod +x *.sh
+./fix-apt-missing-repository-keys.sh 
+sudo apt-get update
+sudo apt-get install cuda
+ll
+vi Ubuntu-2204-cuda-install.sh
+cat /usr/local/cuda/version.json
+ll
+chmod +x *.sh
+./Ubuntu-2204-cuda-install.sh 
