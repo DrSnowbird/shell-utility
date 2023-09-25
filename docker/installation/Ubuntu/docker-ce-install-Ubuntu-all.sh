@@ -88,18 +88,21 @@ function install_docker_compose() {
 
     # Execute the following command in a terminal window to install it.
 
-    DOCKER_COMPOSE_RELEASE=`curl -s https://github.com/docker/compose/releases/latest | cut -d'"' -f2 | cut -d'/' -f8-`
+    #DOCKER_COMPOSE_RELEASE=`curl -s https://github.com/docker/compose/releases/latest | cut -d'"' -f2 | cut -d'/' -f8-`
     sudo apt-get install -y jq
     DOCKER_COMPOSE_RELEASE=`curl -s https://api.github.com/repos/docker/compose/releases/latest | jq .name -r`
-    #DOCKER_COMPOSE_RELEASE=$(basename $DOCKER_COMPOSE_RELEASE)
+
+    echo
+    echo "...>> Latest: docker/compose: release=${release}"
+    echo
 
     #### ---- Install Docker-compose ---- ####
-    sudo apt remove -y docker-compose
-    sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_RELEASE}/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
+    #sudo apt remove -y docker-compose
+    sudo curl -kL https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_RELEASE}/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose
     sudo chmod +x /usr/bin/docker-compose
     docker-compose -v
-
 }
+
 if [ "`which docker-compose`" = "" ]; then
     install_docker_compose
 else
