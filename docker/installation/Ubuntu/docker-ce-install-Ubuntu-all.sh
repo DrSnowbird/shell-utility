@@ -1,7 +1,8 @@
 #!/bin/bash -x
 
-#### ---- Reference ----
-# https://docs.docker.com/install/linux/docker-ce/ubuntu/
+#### ---- Reference ---- ####
+#### ---- Please use official Docker website for the latest installation: ---- ####
+# https://docs.docker.com/engine/install/ubuntu/
 
 REMOVE_OLD=${1:-false}
 
@@ -16,9 +17,10 @@ function yesNoContinue() {
     
 function remove_old_docker() {
     #### ---- remove old version ----
-    for old in `dpkg -l | grep -i docker | awk '{print $2}' `; do
-        sudo apt-get remove -y $old
+    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do 
+        sudo apt-get remove -y $pkg; 
     done
+
 
     #dpkg -l
     sudo apt-get remove -y docker docker-ce docker-engine docker.io containerd runc
@@ -39,26 +41,30 @@ function install_new_docker() {
         ca-certificates \
         curl \
         gnupg-agent \
-        software-properties-commo
+        software-properties-common
 
     #### ---- Add Docker’s official GPG key ----
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo apt-key fingerprint 0EBFCD88
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    # Add Docker's official GPG key:
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+    # Add the repository to Apt sources:
+    echo \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+
 
     #### ---- Install Docker Community Edition ---- ####
-    curl https://get.docker.com | sh && sudo systemctl --now enable docker
-    #sudo apt-get update -y
-    #sudo apt-cache policy docker-ce
-    #yesNoContinue
-    #sudo apt-get install -y docker-ce-cli containerd.io
-    #sudo systemctl status docker
-    sudo systemctl start docker
-    #sudo systemctl enable docker
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo systemctl --now enable docker
+    sudo systemctl status docker
 
     #Add your user to the docker group to setup permissions. Make sure to restart your machine after executing this command.
-    #su - ${USER}
-    id -nG
     sudo usermod -a -G docker ${USER}
 
     #### ---- Test your Docker installation ---- ####
