@@ -130,7 +130,7 @@ echo "`which conda`"
 echo
 echo "---- Tips: to create and acticate ----"
 echo "conda create --name myenv -c conda-forge python=3.9"
-echo "conda activate myenv
+echo "conda activate myenv"
 echo " ... then you are ready to use ..."
 echo
 echo # To activate this environment, use
