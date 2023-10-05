@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #### ---- developer: ----
 #### author: DrSnowbird
@@ -46,7 +46,7 @@ function install_conda() {
     fi
 }
 export CONDA3_HOME=~/anaconda3
-
+export PATH=$PATH:${CONDA3_HOME}/bin
 
 #### ---- Setup: CONDA ----
 function setup_bashrc_v3() {
@@ -56,21 +56,22 @@ function setup_bashrc_v3() {
         exit 1
     fi
 
-    #FIND_SETUP=`cat ~/.bashrc | grep conda3_initialize`
-    #if [ ! "${FIND_SETUP}" == "" ]; then
-    setup_before=`cat ~/.bashrc | grep -i conda3_initialize`
-    echo ">>> setup_before search=${setup_before}"
-    if [ "${setup_before}" != "" ]; then
-        echo "*** CONDA3 Setup script already in ~/.bashrc file!"
-        echo "... do thing!"
-        return
-    else
-        echo ">>> Insert CONDA3 setup into ~/.bashrc file ..."
-    fi
+#    #FIND_SETUP=`cat ~/.bashrc | grep conda3_initialize`
+#    #if [ ! "${FIND_SETUP}" == "" ]; then
+#    setup_before=`cat ~/.bashrc | grep -i conda3_initialize`
+#    echo ">>> setup_before search=${setup_before}"
+#    if [ "${setup_before}" != "" ]; then
+#        echo "*** CONDA3 Setup script already in ~/.bashrc file!"
+#        echo "... do thing!"
+#        return
 
-    #echo "export CONDA3_HOME=~/anaconda3" >> ~/.bashrc
+    echo "\n" >> ~/.bashrc
+    echo "export CONDA3_HOME=\${HOME}/anaconda3" >> ~/.bashrc
+    echo "export PATH=\$PATH:\${CONDA3_HOME}/bin" >> ~/.bashrc
+    source ~/.bashrc
 
     cat >>$HOME/.bashrc<<EOF
+
 ##########################
 #### ---- Conda: ---- ####
 ##########################
@@ -126,4 +127,17 @@ source "$HOME/.bashrc"
 
 echo "---- SUCCESS: Install: ${latest_conda}"
 echo "`which conda`"
-
+echo
+echo "---- Tips: to create and acticate ----"
+echo "conda create --name myenv -c conda-forge python=3.9"
+echo "conda activate myenv
+echo " ... then you are ready to use ..."
+echo
+echo # To activate this environment, use
+echo #
+echo # $ conda activate myenv
+echo #
+echo # To deactivate an active environment, use
+echo #
+echo # $ conda deactivate
+echo
