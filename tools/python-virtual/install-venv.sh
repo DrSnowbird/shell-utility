@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 PYTHON_VERSION=3
 
