@@ -7,9 +7,7 @@ echo "$(basename $0) <Anaconda3_HOME_PATH>"
 #### You just cut-and-paste the following code into the end of ~/.bashrc file
 ####
 
-export CONDA3_HOME=/home/rsheu/anaconda3
-
-CONDA3_HOME=$(dirname $(dirname $(which conda)))
+export CONDA3_HOME=${HOME}/anaconda3
 CONDA3_HOME=${1:-$CONDA3_HOME}
 if [ "$CONDA3_HOME" == "" ] || [ ! -d $CONDA3_HOME ] ; then
     echo "echo "CONDA3_HOME is None or directory ${CONDA3_HOME} not existing!"
@@ -17,7 +15,7 @@ if [ "$CONDA3_HOME" == "" ] || [ ! -d $CONDA3_HOME ] ; then
     exit 1
 fi
 
-export CONDA3_HOME=~/anaconda3
+export CONDA3_HOME=${CONDA3_HOME}
 export PATH=$PATH:${CONDA3_HOME}/bin
 
 #### ---- Setup: CONDA ---- ####
@@ -105,7 +103,7 @@ echo "`which conda`"
 echo
 echo "---- Tips: to create and acticate ----"
 echo "conda create --name myenv -c conda-forge python=3.9"
-echo "conda activate myenv
+echo "conda activate myenv"
 echo " ... then you are ready to use ..."
 echo
 echo # To activate this environment, use
