@@ -106,13 +106,13 @@ echo "conda create --name myenv -c conda-forge python=3.9"
 echo "conda activate myenv"
 echo " ... then you are ready to use ..."
 echo
-echo # To activate this environment, use
-echo #
-echo # $ conda activate myenv
-echo #
-echo # To deactivate an active environment, use
-echo #
-echo # $ conda deactivate
+echo To activate this environment, use
+echo 
+echo     conda activate myenv
+echo 
+echo To deactivate an active environment, use
+echo 
+echo     conda deactivate
 echo
 
 setup_bashrc_v3
