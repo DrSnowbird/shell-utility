@@ -45,19 +45,62 @@ function install_conda() {
         exit 1
     fi
 }
+export CONDA3_HOME=~/anaconda3
+
 
 #### ---- Setup: CONDA ----
-function setup_bashrc() {
-    setup_before=`cat ~/.bashrc | grep -i CURL_CA_BUNDLE`
-    if [ "${setup_before}" != "" ]; then
-        echo "---- Anaconda CURL_CA_BUNDLE being setup before! Skip this setup!"
-    else
-        echo "## -- Anaconda Cerificate setup: --" >> ~/.bashrc
-        echo "export CURL_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt" >> ~/.bashrc
-        echo "export PATH=$PATH:$HOME/anaconda${PYTHON_VERSION}/bin"
+function setup_bashrc_v3() {
+    if [ "$CONDA3_HOME" == "" ] || [ ! -d $CONDA3_HOME ] ; then
+        echo "echo "CONDA3_HOME is None or directory ${CONDA3_HOME} not existing!"
+        echo "echo "Please provide 'CONDA HOME directory path' as argument! Abort ..."
+        exit 1
     fi
-    source "$HOME/.bashrc"
+
+    #FIND_SETUP=`cat ~/.bashrc | grep conda3_initialize`
+    #if [ ! "${FIND_SETUP}" == "" ]; then
+    setup_before=`cat ~/.bashrc | grep -i conda3_initialize`
+    echo ">>> setup_before search=${setup_before}"
+    if [ "${setup_before}" != "" ]; then
+        echo "*** CONDA3 Setup script already in ~/.bashrc file!"
+        echo "... do thing!"
+        return
+    else
+        echo ">>> Insert CONDA3 setup into ~/.bashrc file ..."
+    fi
+
+    #echo "export CONDA3_HOME=~/anaconda3" >> ~/.bashrc
+
+    cat >>$HOME/.bashrc<<EOF
+##########################
+#### ---- Conda: ---- ####
+##########################
+export CONDA3_HOME=${CONDA3_HOME}
+function conda3_initialize() {
+# added by Anaconda3 5.3.1 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="\$(CONDA_REPORT_ERRORS=false '${CONDA3_HOME}/bin/conda' shell.bash hook 2> /dev/null)"
+if [ \$? -eq 0 ]; then
+    eval "\$__conda_setup"
+else
+    if [ -f "\${HOME}/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "\${HOME}/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        export PATH="\${HOME}/anaconda3/bin:\$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
 }
+conda3_initialize
+
+export SSL_NO_VERIFY=1
+EOF
+
+    tail -n 26  ~/.bashrc
+}
+
 
 function test_conda() {
     conda create -n tf_test -y tensorflow-gpu numpy
@@ -67,7 +110,7 @@ function setup_condarc() {
 #    CONDARC="ssl_verify: /etc/pki/tls/certs/ca-bundle.crt"
 #    echo "${CONDARC}" > "$HOME/.condarc"
 cat <<EOF> $HOME/.condarc
-ssl_verify: /etc/pki/tls/certs/ca-bundle.crt
+ssl_verify: 0
 EOF
 }
 
@@ -75,7 +118,7 @@ EOF
 #### ---- Main: ----
 ####################
 install_conda
-setup_bashrc
+setup_bashrc_v3
 setup_condarc
 
 source "$HOME/.bashrc"
