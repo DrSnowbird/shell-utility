@@ -1,11 +1,25 @@
 #!/bin/bash
 
-echo "--- Usage: "
-echo "$(basename $0) <Anaconda3_HOME_PATH>"
+#### ---- developer: ----
+#### author: DrSnowbird
+#### date: 2023-10-05
+
+#### ---- Usage: ----
+function usage() {
+    echo "-----------------------------------------------------------------------------" 
+    echo "---- Usage: $(basename $0) <CONDA3_HOME: default=${HOME}/anaconda3> "
+    echo "-----------------------------------------------------------------------------" 
+}
+
+if [[ "$1" == @(-h|-H) ]]; then
+    usage $@
+    exit 0
+fi
 
 ###
 #### You just cut-and-paste the following code into the end of ~/.bashrc file
 ####
+
 
 export CONDA3_HOME=${HOME}/anaconda3
 CONDA3_HOME=${1:-$CONDA3_HOME}
@@ -69,7 +83,6 @@ conda3_initialize
 export SSL_NO_VERIFY=1
 
 EOF
-
     tail -n 26  ~/.bashrc
 }
 
@@ -114,10 +127,3 @@ echo To deactivate an active environment, use
 echo 
 echo     conda deactivate
 echo
-
-setup_bashrc_v3
-
-setup_condarc
-
-exit 0
-
