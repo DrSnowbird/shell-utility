@@ -22,3 +22,12 @@ sudo apt-get -y install cuda-toolkit-12-3
 
 rm -f ${deb_pkg}
 
+# ------------------
+# Driver installer:
+# -----------------
+#To install the open kernel module flavor:
+#
+sudo apt-get install -y nvidia-kernel-open-545
+sudo apt-get install -y cuda-drivers-545
+
+
