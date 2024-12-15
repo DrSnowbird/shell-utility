@@ -1,8 +1,13 @@
-# Several ways to install docker-ce onto Ubuntu
+# (New!) Ubuntu24 Docker and Docker-compose install added
 
 The Official Docker installation script file
 ```
-docker-ce-latest-Ubuntu.sh
+./docker-ce-docker-compose-Ubuntu24.sh
+
+# version (example):
+   docker -v  
+   Docker version 27.4.0, build bde2b89
+
 ```
 
 # CentOS - Docker / docker-compose installation

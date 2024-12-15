@@ -10,16 +10,16 @@ REMOVE_OLD=${1:-false}
 function yesNoContinue() {
     read -p "Are you sure? " -n 1 -r
     echo    # (optional) move to a new line
-    if [[ ! $REPLY =~ ^[Yy]$ ]]
-    then
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e ">>> ... Abort ..."
         exit 1
+    else
+        echo ">>> ... Continue the installation on Ubuntu 24 ..."
     fi
 }
 echo -e ">>> This installation is for Ubuntu 24.04 ..."
 echo -e ">>> WARNING: this installation will automatically remove all OLD Docker and docker-compose"
 yesNoContinue
-
-exit 0
 
  
 function remove_old_docker() {
@@ -30,17 +30,17 @@ function remove_old_docker() {
     sudo apt-get remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 }
 
-if [ "${REMOVE_OLD}" = "true" ]; then
+if [ "`which docker`" = "" ]; then
+    echo -e ">>> Are you sure to remove old Docker? ..."
+    yesNoContinue
     remove_old_docker
-else
-    echo ">>> NOT to remove old docker!"
-    docker -v
-    exit 0
 fi
+#echo -e ">>> Are you sure to continue install new DockerUbuntu 24.04 ..."
+#yesNoContinue
 
 function install_new_docker() {
     # 1. Add Docker's official GPG key:
-    sudo apt-get update
+    sudo apt-get update -y
     # sudo apt-get install -y ca-certificates curl
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -53,8 +53,8 @@ function install_new_docker() {
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     
     # 3. Install Docker Community Edition ---- ####
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get update -y
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo service docker enable --now
     sudo service docker status
 
@@ -66,6 +66,9 @@ function install_new_docker() {
     # 5. Executing the following command will automatically download the hello-world Docker image 
     #    if it does not exist and run it.
     sudo docker run hello-world
+    
+    # 5. Auto Remove unused packages
+    sudo apt autoremove
 
     docker -v
     docker ps
@@ -81,7 +84,8 @@ function install_new_docker() {
 function install_docker_compose_plugin() {
     # ref: https://docs.docker.com/compose/install/linux/#install-using-the-repository
     sudo apt-get update
-    sudo apt-get install docker-compose-plugin
+    sudo apt-get install -y docker-compose-plugin
+    sudo apt install -y docker-compose
 }
 
 function install_docker_compose() {
@@ -106,6 +110,8 @@ function install_docker_compose() {
 
 if [ "`which docker`" = "" ]; then
     install_new_docker
+    sudo usermod -a -G docker ${USER}
+    newgrp docker
 else
     echo ">>> Docker already installed!"
     docker -v

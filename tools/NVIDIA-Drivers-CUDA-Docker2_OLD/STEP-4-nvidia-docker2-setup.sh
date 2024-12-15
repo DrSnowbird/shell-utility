@@ -2,6 +2,7 @@
 
 # Nvidia Container toolkit
 # ref: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker
+# ref: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installing-with-apt
 
 docker --version
 

@@ -4,14 +4,15 @@ set -e
 
 CONT_YES=1
 function askToContinue() {
+    echo -e "Warning: $1"
     read -p "Are you sure to continue (Yes/No)?" -n 1 -r
     echo    # (optional) move to a new line
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ".... do dangerous stuff"
     else
+        echo -e ">>> Abort! ..."
         CONT_YES=0
-        exit 0
+        exit 1
     fi
 }
 echo $CONT_YES
@@ -22,11 +23,12 @@ askToContinue
 ####################################
 echo "ref: https://medium.com/analytics-vidhya/install-cuda-11-2-cudnn-8-1-0-and-python-3-9-on-rtx3090-for-deep-learning-fcf96c95f7a1"
 function graphics_driver() {
-    sudo add-apt-repository ppa:graphics-drivers/ppa
+    sudo add-apt-repository ppa:graphics-drivers/ppa -y
     sudo apt-get update
     ubuntu-drivers devices
 }
-graphics_driver
+# graphics_driver
+
 
 ##################################
 #### ---- NVIDIA Driver: ---- ####
@@ -51,11 +53,10 @@ function nvidia_driver() {
     echo "Once the installation is completed, reboot your system:"
     echo "sudo reboot"
     echo "When the system is back, you can view the status of the graphic card using the nvidia-smi monitoring tool:"
-    sudo apt-get install nvidia-driver-${NVIDIA_DRIVER_VERSION}
-
-    nvidia-smi
+    # sudo apt-get install nvidia-driver-${NVIDIA_DRIVER_VERSION}
+    #nvidia-smi
 }
-nvidia_driver
+# nvidia_driver
 
 ##################################
 #### ---- CUDA TOOLKIT: ----  ####

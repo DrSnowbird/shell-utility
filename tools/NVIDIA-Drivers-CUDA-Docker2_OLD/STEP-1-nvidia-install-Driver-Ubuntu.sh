@@ -55,7 +55,7 @@ function install_recommended_nvidia_driver() {
         echo ">>>> RECOMMENDED_DRIVER=${RECOMMENDED_DRIVER}"
     fi
 
-    sudo apt install -y ${RECOMMENDED_DRIVER}
+    echo sudo apt install -y ${RECOMMENDED_DRIVER}
     echo -e ">>>> Once the installation is completed, reboot your system:"
     echo -e "     sudo reboot"
     echo -e ">>>> When the system is back, you can view the status of the graphic card using the nvidia-smi monitoring tool:"
