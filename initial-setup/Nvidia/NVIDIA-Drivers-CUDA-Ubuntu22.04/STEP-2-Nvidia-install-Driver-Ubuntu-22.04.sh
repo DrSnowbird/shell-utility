@@ -7,7 +7,7 @@ remove_old=1
 CONT_YES=1
 function askToContinue() {
     echo -e "Warning: $1"
-    read -p "Are you sure to continue (Yes/No)?" -n 1 -r
+    read -p "Are you sure to continue (Y or N)?" -n 1 -r
     echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ".... do dangerous stuff"
@@ -19,6 +19,10 @@ function askToContinue() {
 }
 echo $CONT_YES
 askToContinue
+
+echo -e " ... continue ..."
+exit 0
+
 
 function remove_old_nvidia_driver() {
     if [ $remove_old -gt 0 ]; then
