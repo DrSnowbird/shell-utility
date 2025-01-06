@@ -21,8 +21,6 @@ echo $CONT_YES
 askToContinue
 
 echo -e " ... continue ..."
-exit 0
-
 
 function remove_old_nvidia_driver() {
     if [ $remove_old -gt 0 ]; then
